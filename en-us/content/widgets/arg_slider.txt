@@ -1,0 +1,23 @@
+|name	=nana::arg_slider
+|header	=<nana/gui/widgets/slider.hpp>
+|decl	=#class arg_slider;#
+:A type of slider event parameter.
+
+==base==
+[[event_arg]/events/event_arg]
+
+==member types==
+widget
+:a reference of the slider being handled
+
+==remark==
+:A possible implementation
+```
+struct arg_slider
+{
+	slider& widget;
+};
+```
+==see also==
+[[slider]]
+

@@ -1,0 +1,99 @@
+|name	=nana::inputbox
+|header	=<nana/gui/msgbox.hpp>
+|decl	=#class inputbox;#
+:The class inputbox provides a simple convenience dialog to get values from the user. The input value can be a string, a number, an option from a dropdown list or a date.
+
+==member types==
+boolean[#1.5.4]
+:Shows a checkbox for boolean input.
+integer
+:Integer input.
+real
+:Floating-point number input.
+text
+:String input or an option from a dropdown list.
+date
+:Date input
+path
+:Path of a file. The path requires an object of filebox, when the user clicks the `Browse` button, it invokes the filebox with proper configurations to query a filename.
+
+==member functions==
+constructors
+:constructs the inputbox instance
+decl=#inputbox(window owner, std::string description, std::string title={});#
+--parameters--
+owner
+:A handle to an owner window.
+description
+:A description that tells users what the purpose for the input. It can be a [[formatted-text]//https://github.com/cnjinhao/nana/wiki/Formatted-Text].
+title
+:The title for the inputbox.
+--end--
+
+---Modifiers---
+image
+:shows images at left/right side of inputbox
+decl=#void image([[paint::image]/paint/image] img, bool is_left, const rectangle& rt_valid={});#
+--parameters--
+img
+:The image
+is_left
+:Specifies #true# to place the image at left side, #false# to place the image at right side
+rt_valid
+:The area of the image to be displayed
+--end--
+
+image_v
+:shows images at top/bottom side of inputbox
+decl=#void image_v([[paint::image]/paint/image] img, bool is_top, const rectangle& rt_valid={});#
+--parameters--
+img
+:The image
+is_top
+:Specifies #true# to place the image at top side, #false# to place the image at bottom side
+rt_valid
+:The area of the image to be displayed
+--end--
+
+show
+:shows the inputbox
+decl=#template<typename ...Args> bool show(Args&& ..args);#
+:It shows the inputbox and wait for the user input that contents are specified by the args. This method shows the inputbox without preventing the user interacts with other windows.
+--parameters--
+args
+:The arguments for contents
+--returns--
+:#true# if the user closes the inputbox by clicking OK button, #false# if user cancels the dialog.
+--end--
+
+show_modal
+:shows the inputbox
+decl=#template<typename ...Args> bool show_modal(Args&& ..args);#
+:It shows the inputbox and wait for the user input that contents are specified by the args. This method blocks the execution and prevents the user interacts with other windows until the inputbox is closed.
+--parameters--
+args
+:The arguments for contents
+--returns--
+:#true# if the user closes the inputbox by clicking OK button, #false# if user cancels the dialog.
+--end--
+
+verify
+:sets a verification
+decl=#void verify(std::function<bool(window)> verifier);#
+:The verifier checks the user input when user clicks the OK button.
+--parameters--
+verifier
+:A verification function, its parameter represents the handle of the inputbox.
+--end--
+
+==remark==
+:An [[example]//https://github.com/cnjinhao/nana/wiki/Using-Inputbox] to illustrate the usage of inputbox.
+:
+:The i18n
+:The translations that inputbox may use are:
+:  NANA_BUTTON_OK:	OK button
+:  NANA_BUTTON_CANCEL:	Cancel button
+:  NANA_BUTTON_BROWSE:	Browse button
+:and
+:  "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+--end--

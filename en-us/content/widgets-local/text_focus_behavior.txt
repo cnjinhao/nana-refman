@@ -1,0 +1,26 @@
+|name	=nana::textbox::text_focus_behavior
+|header	=<nana/gui/widgets/textbox.hpp>
+|decl	=#enum class text_focus_behavior;#
+:It defines some behaviors of text editor.
+```
+enum class text_focus_behavior
+{
+	//Doesn't select the content
+	none,
+
+	//Selects the content when text editor is focused
+	select,
+
+	//Selects the content when text editor is focused by pressing tab
+	select_if_tabstop,
+
+	//Selects the content when text editor is focused by clicking 
+	select_if_click,
+
+	//Selects the content when text editor is focused by pressing tab or clicking
+	select_if_tabstop_or_click
+};
+```
+
+
+

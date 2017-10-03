@@ -1,0 +1,185 @@
+|name	=nana::place
+|header	=<nana/gui/place.hpp>
+|decl	=#class place;#
+:The class place is used for layout management. Generally, a place object attaches to a widget, then it automatically positions and resizes its child widgets.
+:
+:A place divides the surface of widget into fields, a [[field]/utilities/place-field] represents an area of the widget. How a widget is divided into fields is defined by a given [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text].
+
+==member types==
+[[field_reference]/utilities/place-field]
+:Interface for accessing [[field]/utilites/place-field] object which is maintained by the place.
+
+==member functions==
+constructors
+:constructs the place instance.
+decl=#place();#
+decl=#place(window handle);#
+
+--parmeters--
+handle
+:A handle to a widget to be bound to the place for layout management.
+--except--
+std::invalid_argument
+:throws if handle is invalid.
+--end--
+
+bind
+:binds to a widget for layout management
+decl=#void bind(window handle);#
+--parameters--
+handle
+:A handle to a widget to be bound to the place for layout management.
+--except--
+std::invalid_argument
+:throws if handle is invalid.
+std::runtime_error
+:throws the place has alread bound to a widget.
+--end--
+
+collocate
+:collocates the fields.
+decl=#void collocate();#
+:It repositions and resizes its fields through the given [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text].
+:The place collocates automatically when the bound window resizes. But when modify/reset the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] or attach a widget to a field, the collocate() should be called manually, otherwise these changes have no effect until the bounded window is resized.
+--end--
+
+window_handle
+:returns the handle of bound window.
+decl=#window window_handle() const;#
+--returns--
+:The handle of bound window.
+--end--
+
+---Access field---
+field/operator[]
+:access a specified field.
+decl=#[[field_reference]/utilities/place-field] field(const char* name);#
+decl=#[[field_reference]/utilities/place-field] operator[](const char* name);#
+:Returns a reference to the field which is specified with a given name.
+:If a name of field is not represented by the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text], it creates an invisible field. All widgets attaching to the invisible field will be invisible as well. All widgets attaching to the invisible field will be visible when resets a [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] which contains the name of field.
+--parameters--
+name
+:a name of field.
+--returns--
+:The reference of the specified field.
+--end--
+
+field_display
+:displays/discards a field.
+decl=#void field_display(const char* name, bool displayed);#
+decl=#bool field_display(const char* name) const;#
+:Shows/hides all widgets which are bound to the named field. The field doesn't take up the same space as before when discards it.
+:  0), Displays/discards a named field.
+:  1), Determines whether a specified field is displayed.
+--parameters--
+name
+:Specifies a name of the requested field.
+displayed
+:A boolean flag to specify the display of the field.
+--returns--
+:#true# if the specified field is displayed, #false# otherwise.
+--end--
+
+field_visible
+:shows/hides a named field.
+decl=#void field_visible(const char* name, bool visible);#
+decl=#bool field_visible(const char* name) const;#
+:Shows/hides all widgets which are bound to the named field. The field takes up the same space as before when hides it.
+:  0), Shows/hides a named field.
+:  1), Determines whether a specified field is visible.
+--parameters--
+name
+:Specifies the name of a field.
+visible
+:A boolean flag indicates the visibility of the field.
+--returns--
+:#true# if the specified field is visible, #false# otherwise.
+--end--
+
+---Dockable pane---
+dock
+:add a factory of dockable pane.
+decl=#template<typename Panel, typename ...Args> place& dock(const std::string& dock_name, const std::string& factory_name, Args&& ...args);#
+decl=#place& dock(const std::string& dock_name, std::string factory_name, std::function<std::unique_ptr<widget>(window)> factory);#
+:Creates a factory for a specific dockable pane.
+:  0), Creates a factory that creates the Panel for the dockable pane.
+:  1), Creates a factory that creates a dockable pane which is created by the function factory.
+:See the example of creating a dock.
+--parameters--
+dock_name
+:specifies a dock, that the factory to be attached to the specified dock.
+factory_name
+:the name of the factory. If this parameter isn't an empty string, the place will hold the factory. If the parameter is an empty string, the place will create the dockable pane immediately and then drop the factory.
+args
+:the arguments will be passed to the constructor of Panel, as following statement #new Panel{DockPaneHandle, std::forward<Args>(args)...}#
+--returns--
+:The reference of #*this#.
+--end--
+
+dock_create
+:invokes a factory of dockable pane.
+decl=#widget* dock_create(const std::string& factory);#
+:Invoke a specified factory to create an instance of dockable pane.
+--parameters--
+factory
+:name of the factory.
+--returns--
+:A pointer to the widget that created by the factory.
+--end-- 
+
+
+
+---Modifiers---
+div
+:defines fields
+decl=#void div(const char* [[div_text]//https://github.com/cnjinhao/nana/wiki/Div-Text]);#
+decl=#const std::string& div() const noexcept;#
+--parameters--
+div_text
+:Defines fields and rule of layout.
+--returns--
+:The [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text].
+--except--
+std::invalid_argument
+:throws when the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] contains nonunique field names.
+--end--
+
+erase
+:erases a window from field
+decl=#void erase(window handle);#
+:There are two ways to erase a widget from a field.
+:1, When a widget destroys, it will be removed automatically.
+:2, Call the #erase()# function to erase it.
+:
+:The #erase()# doesn't destroy the specified window.
+--parameters--
+handle
+:A handle to a window to be erased.
+--end--
+
+modify
+:modifies an existing field
+decl=#void modify(const char* name, const char* [[div_text]//https://github.com/cnjinhao/nana/wiki/Div-Text]);#
+:Modifies a specified field, the field must be existing.
+--parameters--
+name
+:a name of the requested field.
+div_text
+:The [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] for the requested field.
+--except--
+std::invalid_argument
+:when [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] is a nullptr or the specified field name is not existing or the specified field name is redefined.
+--end--
+
+splitter_renderer
+:sets a customized renderer for splitter
+decl=#void splitter_renderer(std::function<void(window,paint::graphics&,mouse_action)> fn);#
+--parameters--
+fn
+:A function object which implements the renderer
+--end--
+
+==remark==
+:Refer to the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] for the rule of layout management.
+--end--
+

@@ -1,0 +1,75 @@
+|name	=nana::nested_form
+|header =<nana/gui.hpp>
+|decl	=#class nested_form;#
+:The nested_form widget represents a native window to be a child of other forms. Overall it is a root widget(see [[Overview of widgets]//./widgets/overview.htm]) which attaches the OS/Windowing system's native window. Using this feature, you can dock other native windows to the nested form, such as a web browser ActiveX control.
+
+==base==
+[[widget_object<category::root_tag>]//./widgets/widget_object_root_tag.htm] : public [[widget]]
+
+==events==
+[[general events]//./core/events.htm]
+
+==member types==
+appear
+:a typedef name of nana::appear, it is a helper template class for creating appearance of the form.
+
+==member functions==
+constructors
+:constructs the nested form widget
+decl=#nested_form(const form& parent, const rectangle& rect = {}, const appearance& appear = {});#
+decl=#nested_form(const nested_form& parent, const rectangle& rect = {}, const appearance& appear = {});#
+decl=#form(window parent, const rectangle& rect = {}, const appearance = {});#
+decl=#form(window parent, const appearance = {});#
+:The nested form's constructors always create a UI element, it is a root widget(see [[Overview of widgets]//./widgets/overview.htm]), so that the class does not provide a create() method to create the UI elelement.
+:  0,1,2) Creates a nested form in a parent with specified position, size and appearance.
+:  3) Creates a nested form in a parent with specified appearance.
+--parameters--
+parent
+:specifies an parent for the form
+rect
+:the position and size for the new form
+appear
+:an appearance for the form
+--end--
+
+---Access place---
+collocate[#1.4]
+:collocates the [[place]//./utilities/place.htm]
+decl=#void collocate() noexcept;#
+:Collocates the internal [[place]//./utilities/place.htm] object. If the form doesn't have a [[place]//./utilities/place.htm] object, nothing will happen.
+--end--
+
+div[#1.4]
+:sets a new div-text
+decl=#void div(const char* div_text);#
+:Sets a new div-text. It will create a [[place]//./utilities/place.htm] object if the form doesn't have a [[place]//./utilities/place.htm] object.
+--parameters--
+div_text
+:a string of div-text
+--end--
+
+get_place[#1.4]
+:returns a reference of the [[place]//./utilities/place.htm]
+decl=#[[place]//./utilities/place.htm]& get_place();#
+:Returns a referece of the [[place]//./utilities/place.htm] object. It will create a [[place]//./utilities/place.htm] object if the form doesn't have a [[place]//./utilities/place.htm] object.
+--returns--
+:The reference of the internal [[place]//./utilities/place.htm] object.
+--end--
+
+operator[][#1.4]
+:access a field
+decl=#[[place]//./utilities/place.htm]::field_reference operator[](const char* field_name);#
+:Access a field with a specified name. It creates a field if the requested field doesn't exist.
+--parameters--
+field_name
+:name of the requested field
+--returns--
+:The reference of the requested field.
+--end--
+
+
+==see also==
+[[Overview of widgets]//./widgets/overview.htm]
+[[form]]
+
+

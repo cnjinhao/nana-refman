@@ -1,0 +1,117 @@
+|name	=nana::paint::image
+|header	=<nana/paint/image.hpp>
+|decl	=#class image;#
+:The class image is used for loading an image resource. The supported image types are Windows Bitmap/ICO, [[PNG and JPEG]//https://github.com/cnjinhao/nana/wiki/Configuration-of-Third-Party-Libraries-for-Nana].
+
+==member functions==
+constructors
+:constructs the image instance
+decl=#image() noexcept;#
+decl=#image(const image&);#
+decl=#image(image&&);#
+decl=#explicit image(const std::string& file);#
+decl=#explicit image(const std::wstring& file);#
+:Constructs an image instance.
+:  0) Default constructor.
+:  1) Copy constructor.
+:  2) Move constructor.
+:  3,4) Load an image file.
+--parameters--
+file
+:Path to an image file.
+--end--
+
+operator=
+:assign an image
+decl=#image& operator=(const image& other);#
+decl=#image& operator=(image&& other);#
+:Assign an image from another image object.
+:  0) Copy assignment operator
+:  1) Move assignment operator
+--parameters--
+other
+:another image to assign as source
+--returns--
+:The reference of #*this#.
+--end--
+
+---File operations---
+close
+:releases an loaded image resource
+decl=#void close() noexcept;#
+--end--
+
+open
+:loads an image
+decl=#bool open(const std::string& file);#
+decl=#bool open(const std::wstring& file);#
+decl=#bool open(const void* data, std::size_t bytes);#
+:Loads an image
+:  0,1) Load an image from a file.
+:  2) Opens an icon from a specified buffer.
+--parameters--
+file
+:Path to an image file
+data
+:A data pointer to an icon buffer
+bytes
+:The length of the icon buffer pointed by data, in byte.
+--returns--
+:#true# if the image is loaded successfully, #false# otherwise.
+--end--
+
+---Observers---
+alpha
+:determines whether the image contains alpha channal.
+decl=#bool alpha() const noexcept;#
+--returns--
+:#true# if the image contains alpha channel, #false# otherwise.
+--end--
+
+empty
+:check if an image has been loaded
+decl=#bool empty() const noexcept;#
+--returns--
+:#false# if an image has been loaded, #true# otherwise.
+--end--
+
+size
+:returns dimension of the image
+decl=#nana::size size() const noexcept;#
+--returns--
+:The dimension of the image
+--end--
+
+---Operations---
+paste
+:pastes the image into a graphics
+decl=#void paste(graphics& graph, const point& pt_dst) const;#
+decl=#void paste(const rectangle& rt_src, graphics& graph, const point& pt_dst) const;#
+:Pastes the image into a graphics
+:  0) Pastes the image tinto a graphics at a specified point.
+:  1) Pastes the specified area of image into the a graphics at a specified point.
+--parameters--
+graph
+:The graphics object into where the image to be pasted
+pt_dst
+:The destination point
+rt_src
+:The area of image to be pasted
+--end--
+
+stretch
+:pastes the image into a graphics
+decl=#void stretch(const rectangle& rt_src, graphics& graph, const rectangle& rt_dst) const;#
+:Pastes the image into a graphics, stretching or compressing the image to fit the dimension of the destination rectangle.
+--parameters--
+rt_src
+:The area of image to be pasted as source
+graph
+:The graphics object into where the image to be pasted
+rt_dst
+:The destination rectangle
+--end--
+
+==remark==
+:Class image retains shared ownership of an image resource. Several image objects may own the same image resource.
+--end--

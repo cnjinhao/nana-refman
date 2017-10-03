@@ -1,0 +1,89 @@
+|name	=nana::listbox::column_interface
+|header	=<nana/gui/widgets/listbox.hpp>
+|decl	=#class column_interface;#
+:Interface for listbox column operations
+
+
+==member functions==
+text_align
+:sets alignment of column text
+decl=#void text_align(align align_type) noexcept;#
+:Sets the text alignment of the column.
+--parameters--
+align_type
+:A value of nana::align
+--end--
+
+fit_content
+:adjusts the column width to fit content
+decl=#void fit_content(unsigned maximum = 0) noexcept;#
+:Adjusts the column width to fit its content.
+:If maximum was 0, the parameter is ignored, the listbox uses range width or scheme's max_fit_content.
+:The priority of maximal value is: maximum, ranged width and scheme's max_fit_content.
+--parameters--
+maximum
+:Sets the width of column to the maximum if the width of content is larger than maximal value. Ignored if it is 0.
+--end--
+
+position[#1.5]
+:returns the position of the column
+decl=#size_type position(bool disp_order) const noexcept;#
+:Returns the absolute position or display position of the column.
+--parameters--
+disp_order
+:Indicates whether the absolute position or display position to be returned. If this parameter is #true#, the dislay position is returned, if the parameter is #false#, the absolute position is returned. 
+--returns--
+:The absolute position or display position of the column.
+--end--
+
+visible
+:column visibility
+decl=#bool visible() const noexcept;#
+decl=#void visible(bool is_visible) noexcept;#
+:Column visibility operation.
+:  0) Determines the visibility state of the column.
+:  1) Shows/hides the column.
+--parameters--
+is_visible
+:indicates whether to show or hide the column
+--returns--
+:0) #true# if the column is visible, #false# otherwise. 
+--end--
+
+width
+:width of the column
+decl=#unsigned width() const noexcept;#
+decl=#void width(unsigned pixels) noexcept;#
+decl=#void width(unsigned minimize, unsigned maximize);#
+:Operations for the column width
+:  0) Returns the width of the column.
+:  1) Sets the width of the column.
+:  2) Sets the minimal and maximal width to the column for automatically adjusting. This is ranged width.
+--parameters--
+pixels
+:the pixels of width
+minimum
+:the minimal width
+maximum
+:the maximal width. Maximum must be larger than minimum, but if minimum is 0, maximum = 0 is allowed.
+--returns--
+:0) Returns the width of the column.
+--except--
+std::invalid_argument
+:if #((maximum <= minimun) && (minimum != 0))#
+--end--
+
+
+---Access content---
+text[#1.5]
+:gets/sets the text of the column title
+decl=#std::string text() const noexcept;#
+decl=#void text(std::string title);#
+:0) returns the title.
+:1) sets a new title.
+--parameters--
+title
+:title of the column, in UTF-8 encoded.
+--returns--
+:0) Returns the title of the column.
+--end--

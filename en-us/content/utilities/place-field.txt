@@ -1,0 +1,4 @@
+|name	=nana::place::field_reference
+|header	=<nana/gui/place.hpp>
+|decl	=#class field_reference;#
+:This is an interface to operate field.

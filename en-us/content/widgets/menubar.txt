@@ -1,0 +1,91 @@
+|name	=nana::menubar
+|header	=<nana/gui/widgets/menubar.hpp>
+|decl	=#class menubar;#
+:A menubar widget is a horizontal bar at the top of window with menu items.
+
+==base==
+[[widget_object<category::widget_tag>]//./widgets/widget_object_widget_tag.htm] : public [[widget]]
+
+==events==
+[[general events]//./core/events.htm]
+
+==scheme==
+#text_fgcolor#[#1.5]
+:text color
+#body_highlight#[#1.5]
+:color for highlighting
+#border_highlight#[#1.5]
+:border color for highlighting
+#body_selected#[#1.5]
+:color for selecting
+#border_selected#[#1.5]
+:border color for selecting
+
+==member functions==
+constructors
+:constructs a menubar widget instance
+decl=#menubar();#
+decl=#menubar(window wd);#
+:constructs a menubar.
+:  0), Default constructor, which constructs the menubar object but doesn't create a menu bar.
+:  1), Constructs and creates a menu bar for a specified window.
+--parameters--
+wd
+:a handle to the window to which the menu bar is to be created. 
+--end--
+
+length
+:returns the number of menus
+decl=#std::size_t length() const;#
+:Returns the number of menus.
+--returns--
+:the number of menus.
+--end--
+
+---Menu access---
+at
+:access specified menu with bounds checking
+decl=#[[menu]]& at(std::size_t pos) const;#
+:Returns a reference to the menu at specified position.
+--parameters--
+pos
+:position of the menu to return.
+--returns--
+:A reference to the requested menu.
+--except--
+std::out_of_range
+:if #!(pos < length())#.
+--end--
+
+
+---Modifiers---
+create
+:creates the menu bar
+decl=#void create(window wd);#
+:Creates the menu bar for the specified window.
+--parameters--
+wd
+:a handle to the window to which the menu bar is to be created.
+--end--
+
+push_back
+:appends an menu
+decl=#[[menu]]& push_back(const std::string& title);#
+:Appends an new menu. The new menu is empty.
+
+--parameters--
+title
+:title of menu.
+--returns--
+:a reference to the created menu.
+--end--
+
+==remark==
+:The menubar sets a shortkey with a character behind the first of &-character in text for an item.
+```
+menubar.push_back("&File");
+menubar.push_back("Help(&H)");
+```
+
+==see also==
+[[menu]]

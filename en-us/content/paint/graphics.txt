@@ -1,0 +1,506 @@
+|name	=nana::paint::graphics
+|header	=<nana/paint/graphics.hpp>
+|decl	=#class graphis;#
+:The #class# graphics is a 2D graphics renderer. It holds an off-screen memory buffer and provides some drawing functions for rendering 2D shapes, text and images on the ownd off-screen buffer.
+:
+:The off-screen buffer can be shared with multiple objects of graphics. When a graphics object creates a new off-screen buffer, it firstly releases the ownership of the owned off-screen buffer.
+
+==member functions==
+constructors
+:constructs a graphics
+decl=#graphics();#
+decl=#graphics(const graphics& other);#
+decl=#graphics(graphics&& other);#
+decl=#graphics(const nana::size& sz);#
+:Constructs the graphics
+:  0) Default constructor, it creates an empty graphics.
+:  1) Copy constructor, it creates a graphics with other as the other refers to the graphics object.
+:  2) Move constructor, it move-constructs a graphics from other. After the construction, #*this# contains a copy of previous state of other, other is empty.
+:  3) Constructs a graphics with a specified dimension, in pixels.
+--parameters--
+other
+:another graphics object.
+sz
+:dimension of the graphics, in pixels.
+--end--
+
+destructor
+:destructs the owned off-screen buffer if no more graphicses own it.
+decl=#~graphics();#
+:If #*this# owns an off-screen buffer and it is the last graphics owning it, the graphics releases the off-screen buffer.
+--end--
+
+---BitBlt functions---
+bitblt
+:transfers a rectangle of pixels
+decl=#void bitblt(int x, int y, const graphics& src_graph);#
+decl=#void bitblt(const nana::rectangle& r_dst, nana::native_window_type src_wd);#
+decl=#void bitblt(const ::nana::rectangle& r_dst, const graphics& src_graph);#
+decl=#void bitblt(const nana::rectangle& r_dst, nana::native_window_type src_wd, const nana::point& p_src);#
+decl=#void bitblt(const ::nana::rectangle& r_dst, const graphics& src_graph, const nana::point& p_src);#
+:Performs a bit-block transfer of the color data corresponding to a rectangle of pixels from the specified source graphics/window into #*this#.
+:  0) Transfers the all color data from source to #*this# at point(x, y).
+:  1,2) Transfers the specified rectangle color data from source to #*this#. The source point is (0, 0).
+:  3,4) Transfers the specified rectangle color data from source to #*this#. The source point is specified by p_src.
+:
+:The following calls to bitblt are the same.
+```
+graph.bitblt(0, 0, src_graph);  //bitblt 0
+graph.bitblt(rectangle{point{0, 0}, src_graph.size()}, src_graph); //bitblt 2
+graph.bitblt(rectangle{point{0, 0}, src_graph.size()}, src_graph, {0, 0}); //bitblt 4
+```
+:
+:The bitblt only transfers valid rectangle. For example,
+```
+//The size of graph is 10x10, the size of src_graph is 15x15
+//The following bitblt operation transfers color data of src_graph at
+//rectangle{10, 10, 5, 5} to the destination at point(5, 5).
+graph.bitblt(rectangle{5, 5, 10, 10}, src_graph, {10, 10});
+```
+:The valid rectangle is an overlapping rectangle of graph, src_graph and rectangle{5, 5, 10, 10}.
+--parameters--
+x
+:the x-coordinate, in pixels, of the upper-left corner of the #*this# off-screen buffer
+y
+:the y-coordinate, in pixels, of the upper-left corner of the #*this# off-screen buffer
+src_graph
+:the source off-screen buffer
+src_wd
+:a native handle to the source window
+r_dst
+:the destination rectangle
+p_src
+:the source position
+--end--
+
+paste
+:transfers a rectangle of pixels
+decl=#void paste(graphics& dst, int x, int y) const;#
+decl=#void paste(native_window_type dst, const ::nana::rectangle&, int sx, int sy) const;#
+decl=#void paste(native_window_type dst, int dx, int dy, unsigned width, unsigned height, int sx, int sy) const;#
+decl=#void paste(drawable_type dst, int x, int y) const;#
+decl=#void paste(const ::nana::rectangle& r_src, graphics& dst, int x, int y) const;#
+--parameters--
+dst
+:the destination graphics/window
+--end--
+
+stretch
+:transfers color data to fit a specified area
+decl=#void stretch(const nana::rectangle& r_src, graphics& dst, const nana::rectangle& r_dst);#
+decl=#void stretch(graphics& dst, const nana::rectangle& r_dst);#
+:Transfers color data to to destination rectangle, stretching or compressing to fit the destination rectangle.
+--parameters--
+r_src
+:the source rectangle
+r_dst
+:the destination rectangle
+dst
+:the destination graphics
+--end--
+
+
+---Drawings---
+bidi_extent_size
+:computes width and height of text
+decl=#nana::size bidi_extent_size(const std::string& u8str) const;#
+decl=#nana::size bidi_extent_size(const std::wstring& str) const;#
+:Computes width and height of text, the result depends on the current font of the graphics. It can return a precise result if text contains BIDI language.
+--parameters--
+u8str
+:a unicode text in UTF-8 encoded
+str
+:a wide string
+--except--
+nana::utf8_Error
+:throws if the u8str isn't UTF-8 encoded or the bytes is wrong. The exception can be turned off if #nana::utf8_Error::use_throw = false#, but turning off is not recommanded.
+--returns--
+:The dimension of a text in current font of the graphics.
+--see also--
+text_extent_size
+--end--
+
+bidi_string
+:draws string with BIDI reordered.
+decl=#unsigned bidi_string(const nana::point& pos, const wchar_t* str, std::size_t len);#
+decl=#unsigned bidi_string(const nana::point& pos, const char* u8str, std::size_t bytes);#
+:Draws text with BIDI reordered. When the drawn text contains RTL(right-to-left) language words, the RTL lanaguage words are reordered.
+:  0) Renders a wide string.
+:  1) Renders a UTF-8 encoded string.
+--parameters--
+pos
+:the position where the text to be rendered
+str
+:a wide string
+len
+:the number of characters in buffer str to be rendered, in characters
+u8str
+:a UTF-8 encoded string
+bytes
+:the size of buffer in u8str to be renderered, in bytes
+--returns--
+:Returns the width of the rendered string, in pixels.
+--see also--
+string
+--end--
+
+glyph_pixels
+:returns width of each glyph
+decl=#bool glyph_pixels(const wchar_t* str, std::size_t len, unsigned* pxbuf) const;#
+:Computes width of each glyph of a text.
+--parameters--
+str
+:a wide string
+len
+:the length of the string to be requested, in characters.
+pxbuf
+:a buffer for width of glyphs. Its length in bytes must not less than #len * sizeof(unsigned)#, otherwise behavior undefined.
+--returns--
+:#true# if successful, #false# otherwise.
+--end--
+
+line
+:draws a line
+decl=#void line(const nana::point& pos1, const nana::point& pos2);#
+decl=#void line(const nana::point& pos1, const nana::point& pos2, const nana::color& color);#
+:Draws a line, the line includs pos2.
+: 0) Draws a line from pos1 to pos2 with the current graphics selected color.
+: 1) Draws a line from pos1 to pos2 with the specified color, and the color will be selected by the graphics. 
+--parameters--
+pos1
+:begin position of the line
+pos2
+:last position of the line
+color
+:color of the line, and it'll be selected by the graphics. The alpha-channel is ignored
+--end--
+
+line_begin/line_to
+:draws line segments
+decl=#void line_begin(int x, int y);#
+decl=#void line_to(const point& pos, const nana::color& color);#
+decl=#void line_to(const point& pos);
+:Draws line segments.
+:  0) Updates the currently selected position.
+:  1) Draws a line from the currently selected position up to, but not including, the specified point. The currently selected position is set to the specified ending point.
+:
+:Draw a square with sides length of 5px at position (10, 10).
+```
+graph.line_begin(10, 10);
+graph.line_to({15, 10}, colors::black);
+graph.line_to({15, 15});
+graph.line_to({10, 15});
+graph.line_to({10, 10});
+```
+--parameters--
+x
+:starting position
+y
+:starting position
+pos
+:ending position
+color
+:color of line segment
+--end--
+
+set_pixel
+:sets color of a pixel
+decl=#void set_pixel(int x, int y, const ::nana::color& color);#
+decl=#void set_pixel(int x, int y);#
+:Sets color of a specified pixel.
+:  0) Sets a pixel with specified color.
+:  1) Sets a pixel with currently selected color.
+--parameters--
+x
+:the x-coordinate of point to be set
+y
+:the y-coordinate of point to be set
+color
+:the color to be used for painting the pixel
+--end--
+
+string
+:draws a string
+decl=#void string(const point& pos, const std::string& u8str);#
+decl=#void string(const point& pos, const std::string& u8str, const color& color);#
+decl=#void string(const point& pos, const wchar_t* str, std::size_t len);#
+decl=#void string(const point& pos, const wchar_t* str);#
+decl=#void string(const point& pos, const ::std::wstring& str);#
+decl=#void string(const point& pos, const ::std::wstring& str, const color& color);#
+:Draws a string.
+:  0) Draws a UTF-8 encoded string at the specified position, using currently selected color.
+:  1) Draws a UTF-8 encoded string at the specified position, using the specified color.
+:  2) Draws a wide string with specified length, in characters, at the specifed position.
+:  3,4) Draws a wide string at the specified position, using currently selected color.
+:  5) Draws a wide string at the specified position, using the specified color.
+:
+:The string functions don't reorder the words even through the text contains BIDI language text. To draw the BIDI language text, see bidi_string.
+--parameters--
+pos
+:the position of the string to be drawn
+u8str
+:a UTF-8 encoded string
+str
+:a wide string
+len
+:the number of characters to be drawn
+color
+:the color to be used to paint the string
+--except--
+nana::utf8_Error
+:throws if the u8str is not UTF-8 encoded when #nana::utf8_Error::use_throw == true#.
+--see also--
+bidi_string
+--end--
+
+text_extent_size
+:computes width and height of text
+decl=#nana::size text_extent_size(const std::string& u8str) const;#
+decl=#nana::size text_extent_size(const std::wstring& str) const;#
+decl=#nana::size text_extent_size(const char* u8str, std::size_t bytes) const;#
+decl=#nana::size text_extent_size(const wchar_t* str, std::size_t len) const;#
+decl=#nana::size text_extent_size(const std::wstring& str, std::size_t len) const;#
+:Computes width and height of a text, the result depends on the current font of the graphics. text_extent_size doesn't reorder the words of the text, if the text contains BIDI language, the result may not be precise.
+: 0,1) Computes width and height of a string.
+:   2) Computes width and height of a string in UTF-8 encoded with the specified length, in bytes.
+: 3-5) Computes width and height of a string with the specified length, in characters.
+--parameters--
+str
+:a wide text
+u8str
+:a unicode text in UTF-8 encoded
+bytes
+:a buffer length to specify a UTF-8 text
+length
+:length of a wide text, in characters
+--except--
+nana::utf8_Error
+:throws if the u8str isn't UTF-8 encoded or the bytes is wrong. The exception can be turned off if #nana::utf8_Error::use_throw = false#, but turning off is not recommanded.
+--returns--
+:The dimension of a text in current font of the graphics.
+--see also--
+bidi_extent_size
+--end--
+
+text_metrics
+:gets text metrics
+decl=#bool text_metrics(unsigned& ascent, unsigned& descent, unsigned& internal_leading) const;#
+--parameters--
+ascent
+:to receive the ascent of text metrics.
+descent
+:to receive the descent of text metrics.
+internal_leading
+:to receive the internal_leading of text metrics.
+--returns--
+:#true# if successful, #false# otherwise.
+--end--
+
+---Image process---
+blend
+:blends graphics
+decl=#void blend(const nana::rectangle& r, const nana::color& color, double fade_rate);#
+decl=#void blend(const nana::rectangle& r, const graphics& blend_graph, const point& blend_graph_point, double fade_rate);#
+:Blends graphics
+:  0) Blends graphics with a color.
+:  1) Blends graphics with another graphics.
+:
+:All blending functions in Nana have following sematics.
+```
+*this = *this * (1 - fade_rate) + color/blend_graph * fade_rate
+```
+--parameters--
+r
+:a rectangle to be blended
+color
+:color to blend
+fade_rate
+:a blending rate, in range of [0, 1]
+blend_graph
+:a graphics to blend
+blend_graph_point
+:blend with a rectangle at the starting position
+--end--
+
+blur
+:blurs a specified area
+decl=#void blur(const nana::rectangle& r, std::size_t radius);#
+:Blurs a rectangle of the graphics.
+--parameters--
+r
+:a rectangle of the graphics
+radius
+:a parameters for the blur process, it is more greater, the graphics more indistinct. It highly impacts on the performance if it is too large.
+--end--
+
+rgb_to_wb
+:transforms a color graphics into monochrome graphics
+decl=#void rgb_to_wb();#
+:Transforms #*this# into monochrome graphics.
+--end--
+
+---Miscellaneous---
+flush
+:flushes operations
+decl=#void flush();#
+--end--
+
+save_as_file
+:saves the graphics as a bitmap file
+decl=#void save_as_file(const char* file_u8sr)#
+
+---Modifiers---
+make
+:makes new off-screen buffer
+decl=#void make(const nana::size& sz);#
+:Creates a new off-screen buffer.
+:
+:If the new requested size is same as the size of existing off-screnn buffer, the function has no effect.
+:If the new requested size is zero(#true == sz.empty()#), it releases the existing off-screen buffer.
+--parameters--
+sz
+:the new requested size, in pixels.
+--except--
+std::bad_alloc
+:throws if out of memory.
+--see also--
+resize
+--end--
+
+operator=
+:assign a graphics
+decl=#graphics& operator=(const graphics& other);#
+decl=#graphics& operator=(graphics&& other);#
+:Replaces the owned off-screen buffer with the another owned by other.
+:  0) Shares the ownership of the off-screen buffer owned by other.
+:  1) Move-assigns a graphics from other. After the assignment, other is empty.
+--parameters--
+other
+:another grpahics to share the ownership of off-screen buffer.
+--returns--
+:the reference of #*this#.
+--end--
+
+palette
+:colors of the graphics
+decl=#nana::color palette(bool is_text_color) const;#
+decl=#graphics& palette(bool is_text_color, const nana::color& color);#
+:Colors of the graphics
+:  0) Returns the color.
+:  1) Sets a new color.
+--parameters--
+is_text_color
+:a flag indicates the type of color. If this parameter is #true#, it is text(foreground) color. If the parameter is #false#, it is the color for drawing.
+color
+:a color
+--returns--
+:0) The color requested.
+:1) The reference of #*this#.
+--end--
+
+release
+:releases the off-screen buffer
+decl=#void release();#
+:Releases the off-screen buffer if the off-screen buffer hasn't owned by other graphics.
+--end--
+
+resize
+:resizes the off-screen buffer
+decl=#void resize(const nana::size& sz);#
+:Creates a new off-screen buffer, then copies the existing off-screen buffer to the new buffer.
+:
+:A possible implementation
+```
+void graphics::resize(const ::nana::size& sz)
+{
+	graphics duplicate(std::move(*this));
+	make(sz);
+	bitblt(0, 0, duplicate);
+}
+```
+--parameters--
+sz
+:the new requested size, in pixels.
+--except--
+std::bad_alloc
+:throws if out of memory.
+--see also--
+make
+--end--
+
+swap[#1.5.6]
+:swaps two graphicses
+decl=#void swap(graphics& other) noexcept;#
+:Exchanges the off-screen buffers of #*this# and other.
+--parameters--
+other
+:another graphics to exchange its off-screen buffer with
+--end--
+
+typeface
+:font
+decl=#[[paint::font]/paint/font] typeface() const;#
+decl=#void typeface(const [[paint::font]/paint/font]& font);#
+:  0) Returns the current font.
+:  1) Sets a new font.
+--parameters--
+font
+:a new font
+--returns--
+:0) Returns the current font.
+--end--
+
+---Observers---
+context
+:returns native context
+decl=#const void* context() const;#
+:The native context represents a device context. The real type of a context is different on platforms. It requires a cast before use.
+:#reinterpret_cast<HDC>(const_cast<void*>(graph.context()));#, under Windows.
+:#reinterpret_cast<GC>(const_cast<void*>(graph.context()));#, in X11.
+--returns--
+:The native context.
+--end--
+
+empty
+:determines whether the graphics is emmpty
+decl=#bool empty() const;#
+:Determines whether the graphics hasn't owned an off-screen memory buffer.
+--returns--
+:#true# if the graphics is empty, #false# otherwise.
+--end--
+
+operator bool[#1.5.6]
+:determines whether the graphics is not empty
+decl=#explicit operator bool() const noexcept;#
+:Determines whether the graphics has owned an off-screen memory buffer. It is equivalent to #!this->empty()#.
+--returns--
+:#true# if the graphics has owned an off-screen buffer, #false# otherwise.
+--end--
+
+handle
+:returns the drawable handle
+decl=#drawable_type handle() const;#
+:The drawable handle is an abstraction provided by the library, it is platform-independent.
+--returns--
+:The drawable handle.
+--end--
+
+pixmap
+:returns the native pixmap
+decl=#const void* pixmap() const;#
+:The native pixmap represents an image in memory. The real type of a pixmap is different on platforms, it requires a cast before use.
+:#reinterpret_cast<HBITMAP>(const_cast<void*>(graphics.pixmap()))#, under Windows.
+:#reinterpret_cast<Pixmap>(const_cast<void*>(graphics.pixmap()))#, in X11.
+--returns--
+:The native pixmap.
+--end--
+
+size/width/height
+:returns the size of off-screen buffer
+decl=#nana::size size() const;#
+decl=#unsigned width() const;#
+decl=#unsigned height() const;#
+--returns--
+:The size of the off-screen buffer.
+--end--
+

@@ -1,0 +1,140 @@
+|name	=nana::paint::font
+|header	=<nana/paint/graphics.hpp>
+|decl	=#class font;#
+:The class font provides member functions for manipulating the font.
+
+==member types==
+path_type[#1.5]
+:std::experimental::filesystem::path.
+font_style[#1.5]
+:a type defines font styles.
+
+==member functions==
+constructors[#1.5]
+:constructs a font instance
+decl=#font();#
+decl=#font(const font&);#
+decl=#font(drawable_type);#
+decl=#font(const std::string& family_name, double size_pt, const font_style& fs = {});#[#1.5]
+decl=#font(double size_pt, const path_type& truetype, const font_style& fs = {});#[#1.5]
+:Constructs the font instance.
+:0) Default constructor, it creates an application default font.
+:1) Copy constructor
+:2) Creates a font that is same with the given drawable object's.
+:3) Creates a font with the specified font name.
+:4) Creates a font with a specified true-type font file.
+--parameters--
+family_name
+: a family name of font will be created.
+size_pt
+: the font size in pt.
+truetype
+: a path to an existing truetype file.
+fs
+: specifies the font style for the created font.
+--end--
+
+operator=
+:assigned from other font
+decl=#font& operator=(const font& other);#
+--parameters--
+other
+:another font to use as a source.
+--returns--
+:the reference of #*this#.
+--end--
+
+---Observers---
+bold
+:determines whether the font is bold
+decl=#bool bold() const;#
+--returns--
+:#true# if the font is bold, #false# otherwise.
+--end--
+
+empty
+:determines whether the font is invalid
+decl=#bool empty() const;#
+--returns--
+:#true# if the font is invalid, #false# otherwise.
+--end--
+
+handle
+:returns the native font handle
+decl=#native_font_type handle() const;#
+:Returns a handle that represents the font in the system.
+--returns--
+:the native font handle.
+--end--
+
+italic
+:determines whether the font is italic
+decl=#bool italic() const;#
+--returns--
+:#true# if the font is italic, #false# otehrwise.
+--end--
+
+name
+:returns family name
+decl=#std::string name() const;#
+--returns--
+:family font of font.
+--end--
+
+size[#1.5]
+:returns the font size
+decl=#double size() const;#
+:Returns the font size, in pt.
+--returns--
+:the size of font, in pt.
+--end--
+
+strikeout[#1.5]
+:determines whether the font is strikeout.
+decl=#bool strikeout() const;#
+--returns--
+:#true# if it is a strikeout font, #false# otherwise.
+--end--
+
+underline[#1.5]
+:determines whether the font is underlined
+decl=#bool underline() const;#
+--returns--
+:#true# if the font is underlined, #false# otherwise.
+--end--
+
+weight
+:returns the weight
+decl=#unsigned weight() const;#
+--returns--
+:the weight of the font.
+--end--
+
+
+---Operations---
+set_default
+:set default font
+decl=#void set_default() const;#
+:Set the font for the application default font.
+--end--
+
+release
+:release the ownership of the font
+decl=#void release();#
+:Release the ownership of the font. The font will be destroyed when no other font objects own it.
+--end--
+
+compares
+:compares two font objects.
+decl=#bool operator==(const font& other) const;#
+decl=#bool operator!=(const font& other) const;#
+:Compares
+:0) Compare two font objects whether they refer the same font.
+:1) Compare two font objects whether they refer the different font.
+--parameters--
+other
+:another font object to be compared.
+--returns--
+:0) #true# if two font objects refer the same font, #false# otherwise.
+:1) #true# if two font objects refer the different font, #false# otherwise.
+--end--

@@ -1,0 +1,314 @@
+|name	=nana::listbox::cat_proxy
+|header	=<nana/gui/widgets/listbox.hpp>
+|decl	=#class listbox::cat_proxy;#
+:The #class cat_proxy# is a manipulator of the listbox category. It is based on concept of [[Input Iterator]//http://www.sgi.com/tech/stl/InputIterator.html].
+
+
+
+==member types==
+inline_notifier_interface
+:interface of inline widget notifier
+#template<typename Value> using value_translator#
+:function to translate cells into Value. Template typedef name of #std::function<Value(const std::vector<cell>& cells)>#
+#template<typename Value> using cell_translater#
+:function to translate Value into cells. Template typedef name of #std::function<std::vector<cell>(const Value&)>#
+
+
+==member functions==
+columns
+:returns the number of header columns
+decl=#size_type columns() const;#
+:Returns the number of header columns of the listbox.
+--returns--
+:The number of the columns.
+--end--
+
+index_by_display_order[#1.4.1]deprecated
+:returns an absolute position
+decl=#size_type index_by_display_order(size_type disp_order) const;#
+:Returns the absolute position of an item with a specified display position. The absolute position is a position in the internal data constainer, the display position is a position on screen display. The absolute position of the items will not be changed when performs a sort.
+:
+:Convert from display order to the absolute position(find the real item in that display position) but without check from current active sorting. Using just last sorting, the display position may be invalidated after performs a sort.
+--parameters--
+disp_order
+:a display position of item on screen display
+--returns--
+:The absolute position.
+--end--
+
+display_order[#1.4.1]deprecated
+:returns an display position
+decl=#size_type display_order(size_type pos) const;#
+:Returns the display position of an item with a specified absolute position.
+--parameters--
+pos
+:an absolute position of item
+--returns--
+:The display position.
+--end--
+
+index_cast[#1.5]
+:converts the item index between absolute position and display position
+decl=#size_type index_cast(size_t from, bool from_disp_order) const;#
+--parameters--
+from
+:The index to be converted
+from_disp_order
+:Indicates whether the from is absolute position or display position. If this parameter is #true#, the from represents display position. If the parameter is #false#, the from represents absolute position.
+--returns--
+:The absolute position of the item if from_disp_order is #true#, display position otherwise.
+--end--
+
+inline_factory[#1.1]
+:sets a factory for inline widget
+decl=#void inline_factory(size_type column, pat::cloneable<pat::abstract_factory<inline_notifier_interface>> factory);#
+:Sets an inline widget factory to enable the listbox to create inline widgets for items. The inline widget is a child widget of the listbox, it represents a certain logical operation for the associated item data.
+--parameters--
+column
+:the position of the column which to be set the factory
+factory
+:a cloneable factory object
+--except--
+std::out_of_range
+:if #!(column < columns())#
+--end--
+
+position
+:returns the position of the category
+decl=#size_type position() const;#
+:Returns the position of the category in the listbox.
+--returns--
+:The position
+--end--
+
+size
+:returns the number of items
+decl=#size_type size() const;#
+:Returns the number of items in the category.
+--returns--
+:The number of items in the category.
+--end--
+
+---Element access---
+at
+:access specified item with bounds checking
+decl=#[[item_proxy]/widgets/listbox-item_proxy] at(size_type pos_abs) const;#
+:Returns an item proxy to the item at specified location pos_abs, with bounds checking.
+--parameters--
+pos_abs
+:position of the item to return
+--returns--
+:Item proxy to the requested item.
+--except--
+std::out_of_range
+:if #!(pos_abs < size())#
+--end--
+
+back
+:access the last item
+decl=#[[item_proxy]/widgets/listbox-item_proxy] back() const;#
+:Returns an item proxy to the last item in the category.
+--returns--
+:Item proxy to the last item.
+--end--
+
+---Iterators---
+begin/cbegin
+:returns an iterator to the beginning
+decl=#[[item_proxy]/widgets/listbox-item_proxy] begin() const;#
+decl=#[[item_proxy]/widgets/listbox-item_proxy] cbegin() const;#
+:Returns an iterator to the first item of the category.
+--returns--
+:Iterator to the first item
+--end--
+
+end/cend
+:returns an iterator to the end
+decl=#[[item_proxy]/widgets/listbox-item_proxy] end() const;#
+decl=#[[item_proxy]/widgets/listbox-item_proxy] cend() const;#
+:returns an iterator to the item following the last item of the category.
+--returns--
+:Iterator to the item following the last item.
+--end--
+
+operator++
+:increment iterator
+decl=#cat_proxy& operator++();#
+decl=#cat_proxy operator++(int)#
+:Increment iterator.
+:  0) Moves the category proxy to the next category.
+:  1) Returns a category proxy to the current category, and this category proxy moves to the next category. 
+--returns--
+:The reference of #*this#.
+--end--
+
+operator*
+:access the category
+decl=#cat_proxy& operator*();#
+decl=#const cat_proxy& operator*() const;#
+:Access the category for the STL iterator syntax.
+--returns--
+:The reference of #*this#.
+--end--
+
+operator->
+:access the category
+decl=#cat_proxy* operator->();#
+decl=#cat_proxy* operator->() const;#
+:Access the category for the STL iterator syntax.
+--returns--
+:The pointer to the category.
+--end--
+
+operator==/operator!=
+:checks whether the categories are the same
+decl=#bool operator==(const cat_proxy& other) const;#
+decl=#bool operator!=(const cat_proxy& other) const;#
+:Checks whether the given 2 categories are the same.
+--parameters--
+other
+:an category proxy to be compared
+--returns--
+:0) #true# if they are same, #false# otherwise.
+:1) #true# if they are not same, #false# otherwise.
+--end--
+
+---Model---
+append_model
+:appends a new item
+decl=#template<typename T> void append_model(const T& value);#
+:Appends value to the model container.
+--except--
+std::runtime_error
+:throws if model is not enabled, or model is immutable.
+std::invalid_argument
+:throws if type T does not match for model container's value_type.
+--end--
+
+model/shared_model
+:using model
+decl=#template<typename Mutex, template STLContainer, template ValueTranslator, typename CellTranslator> void model(STLContainer&& container, ValueTranslator vtrans, CellTranslator ctrans);#
+decl=#template<typename Mutex, template STLContainer, template ValueTranslator, typename CellTranslator> void shared_model(STLContainer& container, ValueTranslator vtrans, CellTranslator ctrans);#
+decl=#template<typename Mutex, template STLContainer, typename CellTranslator> void shared_model(const STLContainer& container, CellTranslator ctrans);#
+decl=#model_guard model();#
+:Enables model container
+:  0) Initializes an internal model container through copying/moving from container.
+:  1,2) Attaches an existing standard container. After attaching, the container should not been destroyed until the listbox is destroyed.
+:  3) Accesses the model container.
+--parameters--
+container
+:an object of standard sequence container
+vtrans
+:value translator which is used to translate cells into value type
+ctrans
+:cell translator which is used to translate value type into cells
+--returns--
+:3) a model_guard to access the listbox's model container.
+--end--
+
+---Modifiers---
+append
+:appends a new item
+decl=#template<typename T> [[item_proxy]/widgets/listbox-item_proxy] append(T&& t, bool set_value = false);#
+decl=#void append(std::initializer_list<std::string> u8texts);#
+decl=#void append(std::initializer_list<std::wstring> texts);#
+:Appends a new item.
+:  0) appends a new item through a resolveable object.
+:  1,2) appends a new item through a text initializer list, each element of initializer list corresponds to one column.
+--parameters--
+t
+:the user object that can be resolved by listbox::oresolver is used for appending a new item.
+set_value
+:indicates to determines whether to set the object to be associated with the new item.
+u8texts
+:a text list for columns, in UTF-8 encoded.
+texts
+:a text list for columns.
+--returns--
+:0)A [[item proxy]/widgets/listbox-item_proxy] to the new item.
+--except--
+std::runtime_error
+:if the category attachs an immutable model.
+--end--
+
+display_number[#1.5.4]
+:enables/disables the number of items
+decl=#cat_proxy& display_number(bool display);#
+:Enables/disables the number of items in category to be displayed behind the category title.
+--parameters--
+display
+:A flag indicates whether to enable/disable the number of items. If this parameter is #true#, it shows the number of items. If the parameter is #false#, it doesn't show the number of items.
+--returns--
+:The reference of #*this#.
+--end--
+
+expanded[#1.5.4]
+:expands/collapses the category
+decl=#bool expanded() const;#
+decl=#cat_proxy& expanded(bool expand);#
+:Expands/collapses the category
+:  0), Determines whether the category is expanded.
+:  1), Expands/collapses the category.
+--parameters--
+expand
+:A flag indicates whether to expand/collapse the category. If this parameter is #true#, it expands the category. If the parameter is #false#, it collapses the category.
+--returns--
+:0), #true# if the category is expanded, #false# otherwise.
+:1), The reference of #*this#.
+--end--
+
+push_back
+:adds an item to the end
+decl=#void push_back(std::string u8str);#
+:Adds a new item to the end and sets the first column of the new item with specified text. If the listbox has multiple columns, the text of other columns of the new item are initialized as empty.
+--parameters--
+u8str
+:a text for the first column, in UTF-8 encoded.
+--except--
+std::out_of_range
+:throws if u8str is not in UTF-8 encoded
+--end--
+
+select/selected
+:select the category
+decl=#cat_proxy& select(bool selected);#
+decl=#bool selected() const;#
+:Selects this category. When selects the category, all items of the category will be selected. When unselects the category, all items of the category will be unselected.
+:  0) Selects/Unselects the category.
+:  1) Determines the category is selected.
+--parameters--
+selected
+:indicates whether to select/unselect the category
+--returns--
+:0) The reference of #*this#.
+:1) #true# if the category is selected, #false# otherwise.
+--end--
+
+text
+:title of this category
+decl=#cat_proxy& text(std::string u8str);#
+decl=#cat_proxy& text(std::wstring str);#
+decl=#std::string text() const;#
+:Sets/gets the text of the category's title.
+:  0,1) Sets the title.
+:  2) Returns the title.
+--parameters--
+u8str
+:the new title text, in UTF-8 encoded
+str
+:the new title text
+--returns--
+:0,1) The reference of #*this#.
+:2) The title text of the category.
+--except--
+std::out_of_range
+:throws if u8str is not in UTF-8 encoded.
+--end--
+
+==remark==
+:The listbox category can attach an existing standard sequence container. [[Using STL container]//https://sourceforge.net/p/nanapro/blog/2016/04/preview-of-listbox-model/].
+
+==see also==
+[[listbox]]
+[[item_proxy]/widgets/listbox-item_proxy]
+--end--

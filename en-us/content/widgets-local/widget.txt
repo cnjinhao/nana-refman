@@ -1,0 +1,267 @@
+|name	=nana::widget
+|header =<nana/gui.hpp>
+|decl	=#class widget;#
+:A [[widget]] is a term of Nana that represents a UI element, such as button, label and so on.
+:The #class widget# is a very basic abstract base class for widgets. It defines some general methods to operating the widget object.
+
+
+==member functions==
+close
+:closes the window of this widget
+decl=#void close();#
+:Closes 
+
+cursor
+:sets a cursor
+decl=#void cursor(nana::cursor curs);#
+decl=#nana::cursor cursor() const;#
+
+empty
+:determines whether the widget is invalid
+decl=#bool empty() const;#
+:Checks if the widget has no UI element, i.e. whether #nullptr == handle()#.
+--returns--
+:#true# if the widget is invalid, #false# otherwise
+--end--
+
+enabled
+:enables/disables mouse and keyboard input
+decl=#bool enabled() const;#
+decl=#void enabled(bool enable);#
+:Enables or disables mouse and keyboard input to the widget. When input is disabled, the widget doesn't receive input such as mouse clicks and key presses. When input is enabled, the window receives all input.
+--parameters--
+enable
+:indicates whether to enable or disable the widget. If this parameter is #true#, the widget is enabled. If the parameter is #false#, the widget is disabled.
+--returns--
+:0) The previous status of this widget.
+--end--
+
+enable_dropfiles
+:enables/disables the widget to accept dropped files
+decl=#void enable_dropfiles(bool enable);#
+:Enables or disables the widget to accept dropped files.
+--parameters--
+enable
+:indicates if the widget accepts dropped files. If this parameter is #true#, the widget receives the drag-n-drop files from external programs.
+--end--
+
+focus/focused
+:window focus operations
+decl=#void focus();#
+decl=#bool focused() const;#
+:Window focus operations
+:    0) Sets the keyboard focus to the widget.
+:    1) Determines whether the widget gets the keyboard focus.
+--returns--
+:1) #true# if the widget is focused, #false# otherwise.
+--end--
+
+
+handle
+:returns window handle of this widget
+decl=#window handle() const;#
+:Returns handle of the widget.
+--returns--
+:A window handle of the widget. If the widget is not created, it returns nullptr.
+--end--
+
+move
+:moves the widget
+decl=#void move(const point& pos);#
+decl=#void move(const rectangle& rect);#
+:Changes the position and dimensions of the widget
+:  0) Moves the widget to a specifed position
+:  1) Changes the position and dimensions of the widget.
+--parameters--
+pos
+:The new position of the widget
+rect
+:The new position and dimension of the widget
+--end--
+
+parent
+:returns the window handle of its parent widget
+decl=#window parent() const;#
+--returns--
+:Handle of its parent widget
+--end--
+
+pos
+:returns the position
+decl=#point pos() const;#
+:Returns the position of the widget. The position is relative to the upper-left corner of its parent window.
+--returns--
+:Position of the widget
+--end--
+
+register_shortkey
+:Registers a shortkey
+decl=#widget& register_shortkey(wchar_t key);#
+:Registers a shortkey.
+--parameters--
+key
+:Key to register for shortkey. If this parameter is #0#, the widget removes a registered shortkey.
+--returns--
+:The reference of #*this#.
+--end--
+
+set_capture/release_capture[#1.4]
+:mouse capture to the widget
+decl=#void set_capture(bool ignore_children);#
+decl=#void release_capture();#
+:Captures mouse input either when the mouse is over the capturing window, or when the mouse button was pressed while the mouse was over the capturing window and the button is still down. Only one window at a time can capture the mouse.
+: 0) Captures the mouse input.
+: 1) Releases the mouse input capture.
+--parameters--
+ignore_children
+:indicates whether redirect the mouse input to its child window which is pointed by mouse. If this parameter is #true#, the child window is ignored and the widget receives the mouse input. If the paremeter is #false#, the mouse input is redrected to the child window which is pointed by mouse.
+--end--
+
+size
+:dimension of widget.
+decl=#nana::size size() const;#
+decl=#void size(const nana::size& dms);#
+:Dimension of the widget, in pixels.
+:  0) Returns the dimension.
+:  1) Sets the dimension.
+--parameters--
+dms
+:new dimension.
+--returns--
+:0) dimension of the widget.
+--end--
+
+take_active
+:activation behavior
+decl=#widget& take_active(bool activated, window take_if_not_activated);#
+:Specifies whether to activate the window when mouse is clicked on it.
+--parameters--
+activated
+:indicates whether to activate the window
+take_if_not_activated
+:a handle to a window which will be activated when the widget is clicked. This parameter is only available when activated is #false#. If activated is #true#, the paremeter is ignored
+--returns--
+:The reference of #*this#.
+--end--
+
+---Access content---
+caption/caption_wstring/caption_native[#1.3]
+:sets/gets the caption/text of the widget
+decl=#std::string caption() const throw();#
+decl=#std::wstring caption_wstring() const throw();#[#1.3]
+decl=#native_string_type caption_native() const throw();#[#1.3]
+decl=#widget& caption(std::string text_utf8);#
+decl=#widget& caption(std::wstring text_wide);#
+:0) returns the caption in UTF-8 encoded.
+:1) returns the caption with wide string.
+:2) returns the caption, the text encoding depends on OS platform.
+:3,4) sets new caption.
+--parameters--
+text_utf8
+:caption of widget, in UTF-8 encoded
+text_wide
+:caption of widget, wide string.
+--returns--
+:0-2) text of widget. 3,4) a reference to #*this#.
+--end--
+
+i18n
+:sets caption through a translation
+decl=#template<typename ...Args> void i18n(std::string msgid, Args&&... args);#
+decl=#void i18n(i18n_eval eval);#
+:Sets caption through a translation
+--parameters--
+msgid
+:Message ID
+args
+:arguments for the message ID
+eval
+:Message ID i18n_eval object
+--end--
+
+
+---Appearance---
+bgcolor
+:background color
+decl=#void bgcolor(const color& clr);#
+decl=#color bgcolor() const;#
+:Sets/gets the background color of the widget.
+:  0) Sets the background color.
+:  1) Returns the current background color.
+--parameters--
+clr
+:The new background color
+--returns--
+:1) The background color of the widget
+--end--
+
+fgcolor
+:foreground color
+decl=#void fgcolor(const color& clr);#
+decl=#color fgcolor() const;#
+:Sets/gets the foreground color of the widget.
+:  0) Sets the foreground color.
+:  1) Returns the current foreground color.
+--parameters--
+clr
+:The new foreground color
+--returns--
+:1) The foreground color of the widget
+--end--
+
+tooltip
+:sets tooltip
+decl=#widget& tooltip(const std::string& text);#
+:Sets tooltip of the widget.
+--parameters--
+text
+:text of the tooltip, in UTF-8 encoded
+--returns--
+:The reference of #*this#.
+--end--
+
+typeface
+:sets/gets the font
+decl=#void typeface(const nana::paint::font& font);#
+decl=#nana::paint::font typeface() const;#
+--parameters--
+font
+:a font for the widget
+--returns--
+:1£©a font of the widget.
+--end--
+
+show/hide
+:widget visibility
+decl=#void show();#
+decl=#void hide();#
+:Widget visibility
+:  0) Sets the widget visible.
+:  1) Sets the widget invisible.
+--end--
+
+visible
+:determines visibility
+decl=#bool visible() const;#
+:Determines visibility of the widget.
+--returns--
+:#true# if the widget is visible, #false# otherwise.
+--end--
+
+---Event handling---
+events
+:gets the reference of events object
+decl=#[[general_events]//./core/events.htm]& events() const;#
+:Gets the general events of this widget. Some widgets type hides this method to return the exact events.
+--returns--
+:The reference of general events of the widget.
+--end--
+
+umake_event
+:deletes an event handler
+decl=#void umake_event(event_handle evt) const;#
+:Deletes a specified event handler.
+--parameters--
+evt
+:The handle to the specified event handler which is belong to this widget.
+--end--
