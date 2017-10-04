@@ -144,6 +144,36 @@ bytes
 string
 --end--
 
+frame_rectangle
+:draws a border of the specified rectangle
+decl=#void frame_rectangle(const nana::rectangle& r, const nana::color& left, const nana::color& top, const nana::color& right, const nana::color& bottom);#
+decl=#void frame_rectangle(const nana::rectangle& r, const nana::color& color, unsigned gap);#
+:Draws a border of the specified rectangle.
+--parameters--
+r
+:the rectangle whose border to be drawn
+left/top/right/bottom
+:colors to be used for painting corresponding sides
+color
+:the color to be used for 
+--see also--
+gradual_rectangle, rectangle, round_rectangle
+--end--
+
+gradual_rectangle
+:fills a gradual rectangle
+decl=#void gradual_rectangle(const ::nana::rectangle& r, const nana::color& from, const nana::color& to, bool vertical);#
+--parameters--
+r
+:the rectangle to be fill
+from/to
+:the gradual colors
+vertical
+:a flag indicates that the direction of gradual colors
+--see also--
+frame_rectangle, rectangle, round_rectangle
+--end--
+
 glyph_pixels
 :returns width of each glyph
 decl=#bool glyph_pixels(const wchar_t* str, std::size_t len, unsigned* pxbuf) const;#
@@ -201,6 +231,48 @@ pos
 :ending position
 color
 :color of line segment
+--end--
+
+rectangle
+:draws/fills a rectangle
+decl=#void rectangle(bool solid);#
+decl=#void rectangle(bool solid, const nana::color& color);#
+decl=#void rectangle(const nana::rectangle& r, bool solid);#
+decl=#void rectangle(const nana::rectangle& r, bool solid, const nana::color& color);#
+:Draws a border around the specified rectangle or fills a rectangle.
+:  0) Draws/fills a rectangle with the currently selected color, the size of the rectangle is the size of the off-screen buffer.
+:  1) Draws/files a rectangle with the specified color, the size of the rectangle is the sizeo of the off-screen buffer.
+:  2) Draws/fills a specified rectangle with the currently selected color.
+:  3) Draws/fills a specified rectangle with the specified color.
+--parameters--
+solid
+:indicates whether to draw a border of the rectangle or fill the rectangle.
+color
+:the color to be used for painting the rectangle
+r
+:the position and size of the rectangle
+--see also--
+frame_rectangle, gradual_rectangle, round_rectangle
+--end--
+
+round_rectangle
+:draws a rectangle with rounded corners
+decl=#void round_rectangle(const ::nana::rectangle& r, unsigned radius_x, unsigned radius_y, const nana::color& color, bool solid, const nana::color& color_if_solid);#
+--parameters--
+r
+:the rectangle to be painted
+radius_x
+:the radius of ellipse in x-coordinate
+radius_y
+:the radius of ellipse in y-coordinate
+color
+:the color to be used for painting a border of the rectangle
+solid
+:a flag indicates whether to draw a border or fill the rectangle
+color_if_solid
+:the color to be used for filling the rectangle, it is ignored when #solid == true#.
+--see also--
+frame_rectangle, gradual_rectangle, rectangle
 --end--
 
 set_pixel
