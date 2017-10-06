@@ -576,3 +576,5 @@ decl=#unsigned height() const;#
 :The size of the off-screen buffer.
 --end--
 
+==see also==
+[[drawing]/utilities/drawing]

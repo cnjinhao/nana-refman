@@ -1,0 +1,101 @@
+|name	=nana::drawing
+|header	=<nana/gui.hpp>
+|decl	=#class drawing;#
+:The class drawing registers painting and drawing functions for a specified widget. The functions are called on everytime the widget get refreshed.
+:
+:The registered functions aren't destroyed when destructs the drawing object. The functions only can be deleted by explicity calling #drawing::erase()#/#drawing::clear()# or the destruction of the specified widget.
+
+==member types==
+draw_fn_t
+:A #std::function<># type, wrappers a painting and drawing function. The painting and drawing function prototype is #void([[nana::paint::graphics]/paint/graphics]& graph);#.
+diehard_t
+:A handle to a registered drawing function, returned by #drawing::draw_diehard()#, which will not be removed by #drawing::clear()#.
+
+==member functions==
+constructors
+:constructs a drawing instance
+decl=#drawing(nana::window handle);#
+:Creates a drawing for a specified widget.
+--parameters--
+handle
+:a handle to the widget for which to create the drawing
+--end--
+
+update
+:refreshes the widget
+decl=#void update() const;#
+:Refreshes the widget.
+--end--
+
+---Modifiers---
+clear
+:removes all removable drawing functions.
+decl=#void clear();#
+:A removable drawing functions is registered by #drawing::draw()#.
+--end--
+
+draw
+:registers a painting and drawing function
+decl=#void draw(const draw_fn_t& fn);#
+decl=#void draw(draw_fn_t&& fn);#
+:Registers a painting and drawing function, the function can be removed by #drawing::clear()#.
+--parameters--
+fn
+:a painting and drawing function.
+--end--
+
+draw_diehard
+:registers a painting and drawing function
+decl=#diehard_t draw_diehard(const draw_fn_t& fn);#
+decl=#diehard_t draw_diehard(draw_fn_t&& fn);#
+:Registers a painting and drawing function, the function can't be removed by #drawing::clear()#.
+--parameters--
+fn
+:a painting and drawing function.
+--returns--
+:A handle for the registered function.
+--end--
+
+erase
+:removes a registered drawing function
+decl=#void erase(diehard_t handle);#
+:Removes a registered drawing function which is registered by #drawing::draw_diehard()#.
+--parameters--
+handle
+:a handle to the registered drawing function
+--end--
+
+---Observers---
+empty
+:determines whether the drawing is invalid
+decl=#bool empty() const;#
+:When the specified widget is closed or the form of the widget is zero-sized, the drawing is invalid.
+--returns--
+:#true# if the drawing is invalid, #false# otherwise.
+--end--
+
+==remark==
+:Draw a line on a form
+```
+#include <nana/gui.hpp>
+
+int main()
+{
+	using namespace nana;
+
+	form fm;	
+	drawing dw{fm};
+	dw.draw([](paint::graphics& graph){
+		graph.line({10, 10}, {20, 20});
+	});
+
+	//Showing the form refreshes the form.
+	//Therefore the drawing function will be called.
+	fm.show();
+	exec();
+}
+```
+--end--
+
+==see also==
+[[graphics]/paint/graphics]
