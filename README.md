@@ -1,7 +1,11 @@
 # Nana Reference Manual
 This is a repo of Nana reference manual.
 
+Read the reference manual at http://nanapro.org/en-us/documentation
+
 ## Contribution
+
+Fork the repo, correct typos, words, experssions and sentences.
 
 ### Preview Modifications
 After modifying, you can preview the modifications. The format of preview URL
