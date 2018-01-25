@@ -191,6 +191,7 @@ decl=#template<typename Mutex, template STLContainer, template ValueTranslator, 
 decl=#template<typename Mutex, template STLContainer, template ValueTranslator, typename CellTranslator> void shared_model(STLContainer& container, ValueTranslator vtrans, CellTranslator ctrans);#
 decl=#template<typename Mutex, template STLContainer, typename CellTranslator> void shared_model(const STLContainer& container, CellTranslator ctrans);#
 decl=#model_guard model();#
+:The model is a adopter which allows to attach to a STL sequence container.[[Using STL container]//https://github.com/cnjinhao/nana/wiki/Using-STL-Sequence-Container/]
 :Enables model container
 :  0) Initializes an internal model container through copying/moving from container.
 :  1,2) Attaches an existing standard container. After attaching, the container should not been destroyed until the listbox is destroyed.
@@ -306,7 +307,7 @@ std::out_of_range
 --end--
 
 ==remark==
-:The listbox category can attach an existing standard sequence container. [[Using STL container]//https://sourceforge.net/p/nanapro/blog/2016/04/preview-of-listbox-model/].
+:The listbox category can attach an existing standard sequence container. [[Using STL container]//https://github.com/cnjinhao/nana/wiki/Using-STL-Sequence-Container/].
 
 ==see also==
 [[listbox]]
