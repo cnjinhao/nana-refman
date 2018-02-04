@@ -329,6 +329,18 @@ any exception
 :throws what fn throws
 --end--
 
+enable_single/disable_single
+:Enables/disables single selection
+decl=#void disable_single(bool for_selection);#
+decl=#void enable_single(bool for_selection, bool category_limited);#
+:Enables/disables the listbox whether the user is allowed to select/check more than one item at a time.
+--parameters--
+for_selection
+:indicates whether the operation is applied for selection or is applied for check of an item.
+category_limited
+:indicates whether the user is allowed to select/check another item in different categories. If this parameter is #true#, the user can select/check another item in different categories. If the parameter is #false#, the user only can select/check one item in all categories.
+--end--
+
 scroll[#1.2]
 :scrolls the view to the bottom/top
 decl=#void scroll(bool to_bottom, size_type cat_pos = ::nana::npos);#
