@@ -45,6 +45,7 @@ decl=#group& collocate() noexcept;#
 :The group lays out the child widgets through an internal place object, this method calls collocate of place to lays out the child widgets.
 --returns--
 :The reference of #*this#.
+--end--
 
 div
 :sets a [[div-text]//https://github.com/cnjinhao/nana/wiki/Div-Text]
