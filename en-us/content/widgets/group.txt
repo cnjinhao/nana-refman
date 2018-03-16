@@ -35,8 +35,59 @@ r
 title
 :the title of the group.
 visible
-::a boolean flag that specifies the visibility of the listbox after creating.
+:a boolean flag that specifies the visibility of the listbox after creating.
 --end--
+
+---Layout---
+collocate
+:collocates the child widgets
+decl=#group& collocate() noexcept;#
+:The group lays out the child widgets through an internal place object, this method calls collocate of place to lays out the child widgets.
+--returns--
+:The reference of #*this#.
+
+div
+:sets a [[div-text]//https://github.com/cnjinhao/nana/wiki/Div-Text]
+decl=#group& div(const char* div_text) noexcept;#
+:The group lays out the child widgets through an internal place object, this method can set a div-text for the internal place.
+---parameters---
+div_text
+:a [[div-text]//https://github.com/cnjinhao/nana/wiki/Div-Text] for the internal place
+--returns--
+:The reference of #*this#.
+--end--
+
+operator[]
+:returns the reference of specified field
+decl=#field_reference operator[](const char* field);#
+:It calls #place::operator[]#.
+--parameters--
+field
+:The name of field to be returned
+--returns--
+:A reference to the specified field.
+--exceptions--
+std::runtime_error
+:If an internal error occurs.
+--end--
+
+create_child
+:creates a child widget
+decl=#template<typename Widget, typename ...Args> Widget* create_chlid(const char* field, Args&& ...args);#
+:Creates a child widget and inserts it into a spepcifed field of the internal place. The child widget will be deleted automatically when the group is destroyed.
+:[[Example]//https://github.com/cnjinhao/nana/wiki/Using-Group#implement-above-example-in-another-way]
+--parameters--
+Widget
+:The type of a widget to be created
+field
+:specifies a field to insert the child widget
+args
+:arguments to forward to the constructor of the widget
+--returns--
+:A pointer to the newly created child widget.
+--end--
+
+
 
 ---Selection---
 add_option
@@ -52,3 +103,47 @@ std::logic_error
 --returns--
 :The reference of #*this#.
 --end--
+
+option[#1.6]
+:returns the index of selected option
+decl=#std::size_t option() const;#
+:It returns the index of option which is selected by user. It only can be called if radio mode is enabled, otherwise it throws a std::logic_error exception.
+--returns--
+:The index of user selected option. It returns #group::npos# if none of options is selected.
+--exceptions--
+std::logic_error
+:If the UI element of group widget hasn't been created or the radio mode is not enabled.
+--end--
+
+option_checked
+:determines whether a specified option is checked
+decl=#bool option_checked(std::size_t pos) const;#
+:Determines whether a specified option is checked.
+--paramters--
+pos
+:The position of option
+--returns--
+#true# if the option is checked, #false# otherwise.
+--exceptions--
+std::logic_error
+:If the UI element of group widget hasn't been created.
+std::out_of_range
+:If the specified pos is out of range.
+--end--
+
+radio_mode
+:enables/disables the radio mode
+decl=#group& radio_mode(bool enabled);#
+:The radio mode determines whether the selection is single selection mode or multiple selection mode. The default mode is radio mode.
+--parameters--
+enabled
+:Indicates whether to enable/disable the single selection mode. If this parameter is #true#, the selection of group is single selection mode. If the parameter is #false#, the selection of group is multiple selection mode.
+--returns--
+:The reference of #*this#.
+--exceptions--
+std::logic_error
+:If the UI element of group widget hasn't been created.
+--end--
+
+==remark==
+:[[Using Group]//https://github.com/cnjinhao/nana/wiki/Using-Group] illustrates the usage of the group widget.
