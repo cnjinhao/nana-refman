@@ -119,7 +119,7 @@ option_checked
 :determines whether a specified option is checked
 decl=#bool option_checked(std::size_t pos) const;#
 :Determines whether a specified option is checked.
---paramters--
+--parameters--
 pos
 :The position of option
 --returns--
