@@ -1,0 +1,54 @@
+|name	=nana::group
+|header	=<nana/gui/widgets/group.hpp>
+|decl	=#class group;#[#1.1]
+:The class group represents a widget that creates a container that has a border and title bar. The group widget also inherently provides user selection.
+
+==base==
+[[widget_object<category::widget_tag>]//./widgets/widget_object_widget_tag.htm] : public [[widget]]
+
+==events==
+[[general events]//./core/events.htm]
+
+
+==member types==
+field_reference
+:a reference to a place field object
+
+==member functions==
+constructors
+:constructs a group widget instance
+decl=#group();#
+decl=#group(window parent, const rectangle& r = {}, bool visible = true);#
+decl=#group(window parent, std::string titel, bool formatted = false, unsigned gap = 2, const rectangle& r = {}, bool visible = true);#
+:Constructs the group widget
+: 0) The default constructor. It constructs a group instance without creating the UI element.
+: 1,2) Constructs the instance and creates UI element of the widget.
+--parameters--
+parent
+:the handle to a parent widget.
+formatted
+:determines whether to enable the format-text for group title.
+gap
+:the internal distance between child widgets.
+r
+:specifies the rectangle of the widget.
+title
+:the title of the group.
+visible
+::a boolean flag that specifies the visibility of the listbox after creating.
+--end--
+
+---Selection---
+add_option
+:adds an option
+decl=#group& add_option(std::string text);#
+:Adds an option for the user selection.
+--parameters--
+text
+:option text
+--exceptions--
+std::logic_error
+:If the UI element of group widget hasn't been created.
+--returns--
+:The reference of #*this#.
+--end--
