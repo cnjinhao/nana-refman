@@ -1,0 +1,97 @@
+|name	=nana::msgbox
+|header	=<nana/gui.hpp>
+|decl	=#class msgbox;#
+:The class is used for displaying a model dialog box to prompt a brief message that informs and instructs the user.
+
+==member types==
+icon_t
+:the identifier of icons, default value is icon_none
+button_t
+:the identifier of buttons, default value is ok
+pick_t
+:the identifier of buttons that user clicked
+
+==member functions==
+constructors
+:constructs a msgbox instance
+decl=#msgbox();#
+decl=#msgbox(const msgbox& other);#
+decl=#msgbox(const std::string& title);#
+decl=#msgbox(window owner, const std::string& title, button_t btn = ok);#
+:Construct a msgbox instance.
+: 0) Default constructor that creates a message box with default title and default button, the default button is OK.
+: 1) Copy constructs from an existing msgbox object.
+: 2) Creates a message box with a specified title and default button.
+: 3) Creates a message box with an owner window, a specified title and buttons.
+
+--parameters--
+other
+:another message box to be used for initializing this message box with
+title
+:title of the message box
+btn
+:button patterns for the message box
+--end--
+
+show
+:displays the buffered message
+decl=#pick_t show() const;#
+:Displays the message that are buffered using #operator<<#. It blocks the execution until the message box is closed.
+--returns--
+:The button which user clicked.
+--end--
+
+operator()
+:function-call alternative to show()
+decl=#pick_t operator()() const;#
+:Displays the message that are buffered using #operator<<#. It blocks the execution until the message box is closed.
+--returns--
+:The button which user clicked.
+--end--
+
+---Modifiers---
+clear
+:clears the text message buffer
+decl=#void clear();#
+:Clears the text message buffer.
+--end--
+
+icon
+:sets the icon
+decl=#msgbox& icon(icon_t ico);#
+:Sets the icon of the message box. The icon informs the user what kind of message is.
+--parameters--
+ico
+:identifier of the predefined icon
+--returns--
+:The reference of #*this#.
+--end--
+
+operator<<
+:writes an object to the message buffer
+decl=#msgbox& operator<<(const std::string& u8str);#
+decl=#msgbox& operator<<(const std::wstring& wstr);#
+decl=#msgbox& operator<<(const char* u8str);#
+decl=#msgbox& operator<<(const wchar_t* wstr);#
+decl=#msgbox& operator<<(const charset& chset);#
+decl=#msgbox& operator<<(std::ostream& (*manip)(std::ostream&));#
+decl=#template<typename T> msgbox& operator<<(const T& t);#
+:Writes an object to the message buffer.
+--paramters--
+u8str
+:text to be buffered, in UTF-8 encoded
+wstr
+:text to be buffered
+chset
+:a charset object
+manip
+:a stream manipulator. e.g #std::endl#.
+t
+:any type of object that can be applied to std::ostream's operator<<.
+--returns--
+:The reference of #*this#.
+--end--
+
+==remark==
+:[[Using Message Box]//https://github.com/cnjinhao/nana/wiki/Using-Message-Box] shows the msgbox usages.
+--end--
