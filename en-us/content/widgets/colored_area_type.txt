@@ -1,0 +1,22 @@
+|name	=nana::textbox::colored_area_type
+|header	=<nana/gui/widgets/textbox.hpp>
+|decl	=#struct colored_area_type;#
+:It defines a structure to describe the colored area of textbox.
+```
+struct colored_area_type
+{
+	//The begin line position
+	const std::size_t begin;
+
+	//The number of lines
+	std::size_t count;
+
+	//Background color
+	nana::color bgcolor;
+
+	//Foreground color
+	nana::color fgcolor;
+};
+```
+==see also==
+[[colored_area_access_interface]]

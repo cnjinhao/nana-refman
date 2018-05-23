@@ -16,10 +16,15 @@
 :occurs when the line numbers of text that are displayed on screen are changed
 
 ==member types==
-[[text_focus_behavior]]
+[[colored_area_type]][#1.5]
+:defines highlight scheme for the specified lines
+[[colored_area_access_interface]]
+:interface for manipulating the highlights of lines
+
+[[text_focus_behavior]][#1.5]
 :behaviors when the focus changes
 text_positions
-:text coordinates of beginning of lines
+:text coordinates of beginning of lines, Typedef name of std::vector<nana::upoint>
 
 ==scheme==
 selection
@@ -239,6 +244,14 @@ encoding
 --end--
 
 ---Highlight---
+colored_area_access[#1.5]
+:highlight lines
+decl=#[[colored_area_access_interface]]* colored_area_access();#
+:Returns a pointer which points to an interface for coloring lines.
+--returns--
+:A pointer which points to an interface for coloring lines.
+--end--
+
 set_highlight
 :set a highlight
 decl=#void set_highlight(const std::string& name, const color& fgcolor, const color& bgcolor);#

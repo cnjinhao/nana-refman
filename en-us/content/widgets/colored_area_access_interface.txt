@@ -1,0 +1,88 @@
+|name	=nana::textbox::colored_area_access_interface
+|header	=<nana/gui/widgets/textbox.hpp>
+|decl	=#class colored_area_access_interface;#
+:The interface class defines some methods to manipulate the highlights of textbox lines.
+
+==member types==
+[[colored_area_type]][#1.5]
+:defines highlight scheme for the specified lines
+
+==member functions==
+---Capacity--
+size
+:returns the number of colored areas
+decl=#std::size_t size() const;#
+:Returns the number of colored areas.
+--returns--
+:The number of colored areas
+--end--
+
+---Element access---
+at
+:access specified element with bounds checking
+decl=#std::shared_ptr<[[colored_area_type]]> at(std::size_t pos);#
+:Returns a pointer to the element at specified location pos, with bounds checking. If pos is not within the range, an exception of type #std::out_of_range# is thrown.
+--parameters--
+pos
+:position of the element to return
+--returns--
+:Pointer to the requested element.
+--except--
+:#std::out_of_range# if #!(pos < size())#.
+--end--
+
+get
+:access the colored area of specified line
+decl=#std::shared_ptr<[[colored_area_type]]> get(std::size_t line_pos);#
+:Returns a pointer to the requested colored area object. If line_pos hits the range of colored area defined, it returns the colored area. If there isn't a colored area matches with the line_pos, it creates a new colored area for the line.
+--parameters--
+line_pos
+:a line number of text
+--returns--
+:Pointers to the requested colored area.
+--end--
+
+---Modifiers---
+clear
+:clears the contents
+decl=#bool clear();#
+:Removes all colored area objects. If there isn't a colored area object, it returns false. Otherwise, it returns true and refreshes the textbox.
+--returns--
+:#true# if it holded at least one colored area object, #false# otherwise.
+--end--
+
+remove
+:removes a colored area
+decl=#bool remove(std::size_t line_pos);#
+:Removes a colored area which specified by the line number of text. It doesn't remove any colored area if line pos is missing.
+--parameters--
+line_pos
+:a line number of text to be removed
+--returns--
+:#true# if a colored area was removed, #false# otherwise.
+--end--
+
+==remark==
+:Highlight specified lines
+```
+textbox txbox{ fm };
+
+txbox.events().click([&] {
+	auto caa = text.colored_area_access();
+	
+	//Creates a colored area when it first time called.
+
+	//begine line
+	auto p = caa->get(1);
+
+	//the number of lines.
+	p->count = 1;
+
+	//draws the second line with red background and white text
+	p->bgcolor = colors::red;
+	p->fgcolor = colors::white;
+
+	API::refresh_window(txbox);
+});
+```
+:When the textbox is clicked, it draw the second line with red background and white text. If the textbox only have one or zero line text, it draws with default background color.
