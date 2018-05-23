@@ -18,10 +18,10 @@
 ==member types==
 [[colored_area_type]][#1.5]
 :defines highlight scheme for the specified lines
-[[colored_area_access_interface]]
+[[colored_area_access_interface]][#1.5]
 :interface for manipulating the highlights of lines
 
-[[text_focus_behavior]][#1.5]
+[[text_focus_behavior]]
 :behaviors when the focus changes
 text_positions
 :text coordinates of beginning of lines, Typedef name of std::vector<nana::upoint>
