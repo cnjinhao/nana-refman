@@ -1,0 +1,16 @@
+|name	=nana::scroll_operation_interface
+|header =<nana/gui.hpp>
+|decl	=#class scroll_operation_interface;#
+:It's an interface to access the embedded scrollbar of the widget, such as textbox, listbox and treebox.
+
+==member functions==
+visible
+:determines whether the scrollbar is displayed
+decl=#bool visible(bool vert) const;#
+:Determines whether the scrollbar is displayed.
+--parameters--
+vert
+:#true# indicates the vertical scrollbar, #false# indicates the horizontal scrollbar.
+--returns--
+:#true# if the requested scrollbar is displayed, #false# otherwise.
+--end--

@@ -105,6 +105,16 @@ key
 :The reference of #*this#.
 --end--
 
+scroll_operation[#1.6]
+:access the embedded scrollbars of the widget
+decl=#std::shared_ptr<[[scroll_operation_interface]]> scroll_operation();#
+:It returns an interface to manipluate the embedded scrollbars of the widget.
+:This function returns a #nullptr# if the widget doesn't embed scrollbars.
+:The widgets embedding scrollbars are: textbox, listbox and treebox.
+--returns--
+:Pointer to an interface to manipluate the embedded scrollbars of the widget. #nullptr# if the widget doesn't embed a scrollbar.
+--end--
+
 set_capture/release_capture[#1.4]
 :mouse capture to the widget
 decl=#void set_capture(bool ignore_children);#

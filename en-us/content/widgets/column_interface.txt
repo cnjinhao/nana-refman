@@ -36,6 +36,17 @@ disp_order
 :The absolute position or display position of the column.
 --end--
 
+typeface[#1.6]
+:sets/gets the font
+decl=#void typeface(const [[nana::paint::font]/paint/font]& font);#
+decl=#[[nana::paint::font]/paint/font] typeface() const;#
+--parameters--
+font
+:a font for the listbox column header
+--returns--
+:1) Font of the listbox column header.
+--end--
+
 visible
 :column visibility
 decl=#bool visible() const noexcept;#
