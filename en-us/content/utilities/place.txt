@@ -3,7 +3,7 @@
 |decl	=#class place;#
 :The class place is used for layout management. Generally, a place object attaches to a widget, then it automatically positions and resizes its child widgets.
 :
-:A place divides the surface of widget into fields, a [[field]/utilities/place-field] represents an area of the widget. How a widget is divided into fields is defined by a given [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text].
+:A place divides the surface of widget into fields, a [[field]/utilities/place-field] represents an area of the widget. How a widget is divided into fields is defined by a given [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text][#1.6].
 
 ==member types==
 [[field_reference]/utilities/place-field]
@@ -180,6 +180,6 @@ fn
 --end--
 
 ==remark==
-:Refer to the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text] for the rule of layout management.
+:Refer to the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text][#1.6] for the rule of layout management.
 --end--
 
