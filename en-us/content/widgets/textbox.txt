@@ -321,7 +321,7 @@ decl=#void set_accept(std::function<bool(wchar_t)> pred);#
 :Sets an input predicate which determines whether to accept or refuse the keyboard input depends on specified keys.
 ```
 //Blocks characters 'a' and 'A'
-combox.set_accept([](wchar_t key){
+textbox.set_accept([](wchar_t key){
 	return !('a' == key || 'A' == key);
 });
 ```
