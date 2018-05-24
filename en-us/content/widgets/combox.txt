@@ -1,0 +1,90 @@
+|name	=nana::combox
+|header =<nana/gui/widgets/combox.hpp>
+|decl	=#class combox;#
+:The combox widget is a combined textbox and dropdown list. The dropdown list should pops up when the dropdown arrow is clicked to let user choose a proper option.
+
+==base==
+[[widget_object<category::root_tag>]//./widgets/widget_object_root_tag.htm] : public [[widget]]
+
+==events==
+[[general events]//./core/events.htm]
+#selected(const [[arg_combox]]&)#
+:occurs when a different dropdown list item is selected
+#text_changed(const [[arg_combox]]&)#
+:occurs when the content of textbox is changed
+
+==member types==
+[[item_renderer]/widgets/float_list_item_renderer]
+:an item renderer type
+[[item_proxy]/widgets/combox-item_proxy]
+:iterator to access item
+
+==scheme==
+selection
+:background color of selected text
+selection_unfocused
+:background color of selected text when textbox is not focused
+selection_text
+:color of selected text
+mouse_wheel
+:The number of lines/characters to scroll when the vertical/horizontal mouse wheel is moved
+
+==member functions==
+constructors
+:constructs the combox instance
+decl=#combox();#
+decl=#combox(window parent, bool visible);#
+decl=#combox(window parent, std::string text, bool visible = true);#
+decl=#combox(window parent, const char* text, bool visible = true);#
+decl=#combox(window parent, const rectangle& rect = {}, bool visible = true);#
+:Constructs the combox instance
+: 0) Default constructs the combox instance without creating UI element.
+: 1-4) Construct the combox instance and create UI element.
+--parameters--
+parent
+:a handle to a parent widget for the combox widget
+rect
+:the size and position of the combox widget
+text
+:initialized text displaying in textbox
+visible
+:indicates visibility of the combox widget
+--end--
+
+---Modifiers---
+clear
+:removes all listed options
+decl=#void clear();#
+:Removes all listed options
+--end--
+
+editable
+:enables/disables user input
+decl=#void editable(bool enable);#
+decl=#bool editable() const;#
+:The user input for the textbox
+: 0) Enables/disables the user input for the textbox.
+: 1) Determines whether the user input is enabled.
+--parameters--
+enable
+:indicates whether or not enable the user input
+--returns--
+:1) #true# if the textbox of combox is allowed to input, #false# otherwise.
+--end--
+
+set_accept
+:sets an input predicate
+decl=#void set_accept(std::function<bool(wchar_t)> pred);#
+:Sets an input predicate which determines whether to accept or refuse the keyboard input depends on specified keys.
+```
+//Blocks characters 'a' and 'A'
+combox.set_accept([](wchar_t key){
+	return !('a' == key || 'A' == key);
+});
+```
+--parameters--
+pred
+::a function to be applied on the input for determining whether to accept the input.
+--end--
+
+

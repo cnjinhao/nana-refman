@@ -29,6 +29,8 @@ text_positions
 ==scheme==
 selection
 :background color of selected text
+selection_unfocused
+:background color of selected text when textbox is not focused
 selection_text
 :color of selected text
 mouse_wheel
