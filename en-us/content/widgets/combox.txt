@@ -84,7 +84,7 @@ combox.set_accept([](wchar_t key){
 ```
 --parameters--
 pred
-::a function to be applied on the input for determining whether to accept the input.
+:a function to be applied on the input for determining whether to accept the input.
 --end--
 
 

@@ -316,11 +316,18 @@ mask_char
 --end--
 
 set_accept
-:sets a predicator to determine whether to accept an user intput
-decl=#void set_accept(std::funcion<bool(wchar_t)> pred);#
+:sets an input predicate
+decl=#void set_accept(std::function<bool(wchar_t)> pred);#
+:Sets an input predicate which determines whether to accept or refuse the keyboard input depends on specified keys.
+```
+//Blocks characters 'a' and 'A'
+combox.set_accept([](wchar_t key){
+	return !('a' == key || 'A' == key);
+});
+```
 --parameters--
 pred
-:a function to be applied on the input for determining whether accept the input
+:a function to be applied on the input for determining whether to accept the input.
 --end--
 
 set_undo_queue_length[#1.4.1]
