@@ -51,13 +51,7 @@ visible
 :indicates visibility of the combox widget
 --end--
 
----Modifiers---
-clear
-:removes all listed options
-decl=#void clear();#
-:Removes all listed options
---end--
-
+---Behaviors---
 editable
 :enables/disables user input
 decl=#void editable(bool enable);#
@@ -86,5 +80,64 @@ combox.set_accept([](wchar_t key){
 pred
 :a function to be applied on the input for determining whether to accept the input.
 --end--
+
+
+---Observers---
+text
+:returns the text of an option
+decl=#std::string text(std::size_t pos) const;#
+:Returns the text of an option with specified location pos. If pos is out of range, an exception #std::out_of_range# is thrown.
+--parameters--
+pos
+:position of the requested option
+--returns--
+:Text of the requested option.
+--except--
+:#std::out_of_range# if #!(pos < the_number_of_options())#.
+--end--
+
+
+the_number_of_options
+:returns the number of options
+decl=#std::size_t the_number_of_options() const;#
+:Returns the number of dropdown list options
+--returns--
+:The number of options.
+--end--
+
+---Operations---
+option
+:index of selected item
+decl=#std::size_t option() const;#
+decl=#void option(std::size_t pos);#
+:Index of selected item.
+: 0) Returns the index of selected item.
+: 1) Sets the text from the specified location item, and also selets the item. Nothing is changed if pos is out of range.
+--parameters--
+pos
+:position of the item to be requested
+--returns--
+:0) index of the selected item.
+--end--
+
+
+---Modifiers---
+clear
+:removes all listed options
+decl=#void clear();#
+:Removes all listed options
+--end--
+
+push_back
+:adds an element to the end
+decl=#combox& push_back(std::string text);#
+:Adds an element at the end of the dropdown list.
+--parameters--
+text
+:the text to be added
+--returns--
+:Reference to #*this#.
+--end--
+
 
 
