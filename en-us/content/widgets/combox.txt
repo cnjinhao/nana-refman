@@ -128,6 +128,15 @@ decl=#void clear();#
 :Removes all listed options
 --end--
 
+erase
+:removes a specified option
+decl=#void erase(std::size_t pos);#
+:Removes a specified option from the dropdown list. If #!(pos < the_number_of_options()), nothing is removed.
+--parameters--
+pos
+:position of item to be requested
+--end--
+
 push_back
 :adds an element to the end
 decl=#combox& push_back(std::string text);#
@@ -139,5 +148,54 @@ text
 :Reference to #*this#.
 --end--
 
+image
+:accesses option image
+decl=#void image(std::size_t pos, const [[nana::paint::image]/paint/image]& img);#
+decl=#[[nana::paint::image]/paint/image] image(std::size_t pos) const;#
+:Accesses the image of an option.
+:  0) Sets the image for an option at specified position. Nothing is changed if parameter pos is out of the range.
+:  1) Gets the image for an option at specified position, it throws if pos is out of range.
+--parameters--
+pos
+:position of an option
+image
+:image for the option
+--except--
+:#std::out_of_range# is thrown when set image and the pos is out of range.
+--returns--
+: 1) the image of the option at specified position.
+--end--
+
+image_pixels
+:sets the width of image area
+decl=#void image_pixels(unsigned width);#
+:Sets the width of image area.
+--parameters--
+width
+:the width of image area, in pixel.
+--end--
+
+---Associative element access---
+operator[]
+:accesses an option
+decl=#template<typename Key> [[item_proxy]/widgets/combox_item_proxy] operator[](const Key& key);#
+:Accesses an option through a key.
+--parameters--
+Key
+:type of key parameter
+key
+:a key for the associative option
+--returns--
+:An item_proxy refers to the requested option.
+--end--
+
+erase_key
+:erases an option using a key
+decl=#template<typename Key> void erase_key(Key&& key);#
+:Erases an option using a key if the option is associated with a key.
+--parameters--
+key
+:a key object.
+--end--
 
 

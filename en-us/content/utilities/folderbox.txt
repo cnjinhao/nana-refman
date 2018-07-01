@@ -1,0 +1,48 @@
+|name	=nana::folderbox
+|header	=<nana/gui/filebox.hpp>
+|decl	=#class folderbox;#
+:The class folderbox provides a simple convenience dialog to select a folder.
+
+==member types==
+path_type
+:a type of filesystem path
+
+==member functions==
+constructors
+:constructs a folderbox instance
+decl=#folderbox(window owner = nullptr, const path_type& init_path = {});#
+:Constructs a folderbox instance.
+
+--parameters--
+owner
+:a handle to an owner window
+init_path
+:a default selected path
+--end--
+
+---Operations---
+show/operator()
+:shows the folderbox
+decl=#std::optional<path_type> show() const;#
+decl=#std::optional<path_type> operator()() const;#
+:Shows the folderbox and returns the path to a folder which has been selected by user.
+--returns--
+:a path to a folder which has been selected. If user cancelled the folderbox, it returns an empty std::optional.
+--end--
+
+==remark==
+:Selecting a folder.
+```
+#include <nana/gui/filebox.hpp>
+#include <iostream>
+
+int main()
+{
+    nana::folderbox picker;
+
+    auto folder = picker.show(); //returns an std::optional<nana::folderbox::path_type>
+    if (folder)
+        std::cout << "Selected folder:" << folder.value().string() << std::endl;
+}
+```
+--end--
