@@ -1,0 +1,120 @@
+|name	=nana::combox::item_proxy
+|header	=<nana/gui/widgets/combox.hpp>
+|decl	=#class combox::item_proxy;#
+:The #class item_proxy# is a manipulator of the combox items. It is based on concept of [[Input Iterator]//http://www.sgi.com/tech/stl/InputIterator.html].
+
+
+==member functions==
+icon
+:sets/gets the icon
+decl=#item_proxy& icon(const [[nana::paint::image]/paint/image]& img);#
+decl=#[[nana::paint::image]/paint/image] icon() const;#
+:Sets/gets the icon of the option.
+:  0) Sets the icon of the option.
+:  1) Gets the icon of the option.
+--parameters--
+img
+:image for the option
+--returns--
+:0) The reference of #*this#.
+:1) Image of the option.
+--end--
+
+select/selected
+:selects the option
+decl=#item_proxy& select();#
+decl=#bool selected() const;#
+:Sets/gets the status of selection.
+:  0) Selects the option.
+:  1) Determines whether the option is selected.
+--returns--
+:0) The reference of #*this#.
+:1) Indicates whether the option is selected.
+--end--
+
+text
+:text of option
+decl=#std::string& text() const;#
+:Returns the text of option
+--returns--
+:Text of the option.
+--end--
+
+---Access contained value---
+value/value_ptr
+:accesses contained value
+decl=#template<typename T> T* value_ptr() const;#
+decl=#template<typename T> T& value() const;#
+decl=#template<typename T> item_proxy& value(T&& val);#
+:Access value
+:  0) Returns a pointer to the contained value.
+:  1) Returns a reference to the contained value.
+:  2) Sets the contained value.
+--parameters--
+val
+:a value to be set
+--returns--
+:0) A pointer to the contained value. It returns nullptr if the option doesn't contained a value or target type #T# is not matched.
+:1) A reference to the contained value.
+:2) The reference of #*this#.
+--execpt--
+:#nana::bad_any_cast# if the target type #T# is not matched in method #1)#. 
+--end--
+
+---Iterators---
+operator++
+:increment iterator
+decl=#item_proxy& operator++();#
+decl=#item_proxy operator++(int)#
+:Increment iterator.
+:  0) Moves the item proxy to the next item.
+:  1) Returns a item proxy to the current item, and this category proxy moves to the next item. 
+--returns--
+:The reference of #*this#.
+--end--
+
+operator*
+:access the item
+decl=#item_proxy& operator*();#
+decl=#const item_proxy& operator*() const;#
+:Access the item for the STL iterator syntax.
+--returns--
+:The reference of #*this#.
+--end--
+
+operator->
+:access the item
+decl=#item_proxy* operator->();#
+decl=#item_proxy* operator->() const;#
+:Access the item for the STL iterator syntax.
+--returns--
+:The pointer to the item.
+--end--
+
+operator==/operator!=
+:comparison operators
+decl=#bool operator==(const item_proxy& other) const;#
+decl=#bool operator!=(const item_proxy& other) const;#
+decl=#bool operator==(const char* u8str) const;#
+decl=#bool operator==(const wchar_t* str) const;#
+decl=#bool operator==(const std::string& u8str) const;#
+decl=#bool operator==(const std::wstring& str) const;#
+:Comparison operators
+:  0,1) Checks whether the given 2 item_proxy iterators are the same.
+:  2,3,4,5) Determines whether the text of the option is equal to the specified string.
+--parameters--
+other
+:an item proxy to be compared
+u8str
+:a UTF-8 encoded string
+str
+:a wide string
+--returns--
+:0) #true# if they are same, #false# otherwise.
+:1) #true# if they are not same, #false# otherwise.
+:2,3,4,5) #true# if the text of the first column is equal to the specified string, #false# otherwise.
+--end--
+
+==see also==
+[[combox]]
+--end--

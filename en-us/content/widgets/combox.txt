@@ -198,4 +198,6 @@ key
 :a key object.
 --end--
 
-
+==see also==
+[[item_proxy]/widgets/combox-item_proxy]
+--end--
