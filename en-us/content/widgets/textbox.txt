@@ -200,9 +200,22 @@ decl=#std::pair<upoint, upoint> selection() const;#
 --end--
 
 ---Content access---
-getline
+getline[#1.6.2]
 :read a line of content
 decl=#bool getline(std::size_t pos, std::string& text) const;#
+decl=#bool getline(std::size_t pos, std::size_t offset, std::string& text) const;#
+decl=#std::optional<std::string> getline(std::size_t pos) const;#
+decl=#std::optional<std::string> getline(std::size_t pos, std::size_t offset) const;#
+--parameters--
+pos
+:the index of line which text to be requested.
+text
+:a string variable receives the text of line.
+offset
+:position of the first character to include.
+--returns--
+:0,1) returns #true# if successful.
+:2,3) returns an empty optional if failed.
 --end--
 
 ---File operations---
