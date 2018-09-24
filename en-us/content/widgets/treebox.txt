@@ -243,7 +243,7 @@ bearing
 --end--
 
 
-==Remarks==
+==remark==
 :Loading directoris into the treebox
 ```
 #include <nana/gui.hpp>
