@@ -210,7 +210,7 @@ decl=#void icon_erase(const std::string& name);#
 name
 :the name of image scheme to remove
 --see also--
-:[[item_proxy]/widgets/treebox-item_proxy]::icon.
+[[item_proxy]/widgets/treebox-item_proxy]::icon.
 --end--
 
 insert
