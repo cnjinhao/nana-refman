@@ -17,10 +17,14 @@ operated
 
 ==remark==
 :The member *operated* indicates the latest operation state of the event. 
-:When event *selected* occurs, the *operated* indicates the new selecting state. If it is #true#, it indicates the node is selected, #false# otherwise.
-:When event *expanded* occus, the *operated* indicates whether the child nodes are expanded. If it is #true#, it indicates the child nodes are expanded, #false# otherwise.
-:When event *hovered* occurs, the *operated* indicates whether the node is hovered. If it is #true#, it indicates the node is hovered, #false# otherwise.
-:When event *checked* occurs, the *operated* indicates whether the node is checked. If it is #true#, it indicates the node is checked, #false# otherwise.
+:
+:0) When event *selected* occurs, the *operated* indicates the new selecting state. If it is #true#, it indicates the node is selected, #false# otherwise.
+:
+:1) When event *expanded* occus, the *operated* indicates whether the child nodes are expanded. If it is #true#, it indicates the child nodes are expanded, #false# otherwise.
+:
+:2) When event *hovered* occurs, the *operated* indicates whether the node is hovered. If it is #true#, it indicates the node is hovered, #false# otherwise.
+:
+:3) When event *checked* occurs, the *operated* indicates whether the node is checked. If it is #true#, it indicates the node is checked, #false# otherwise.
 
 ==see also==
 [[general events]//http://nanapro.org/en-us/documentation/core/events.htm], [[treebox]]
