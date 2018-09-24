@@ -228,7 +228,7 @@ title
 --end--
 
 ---Operations---
-scroll_into_view
+scroll_into_view[#1.7]
 :scrolls a specified node into view
 decl=#void scroll_into_view([[item_proxy]/widgets/treebox-item_proxy] node, align_v bearing);#
 decl=#void scroll_into_view([[item_proxy]/widgets/treebox-item_proxy] node);#
