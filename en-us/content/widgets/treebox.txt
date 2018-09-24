@@ -1,6 +1,6 @@
 |name	=nana::treebox
 |header	=<nana/gui/widgets/treebox.hpp>
-|decl	=#class textbox;#
+|decl	=#class treebox;#
 :The class treebox provides a widget that displays a hierarchical list of items, such as files and directories on a disk.
 
 ==base==
