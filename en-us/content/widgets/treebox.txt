@@ -1,0 +1,315 @@
+|name	=nana::treebox
+|header	=<nana/gui/widgets/treebox.hpp>
+|decl	=#class textbox;#
+:The class treebox provides a widget that displays a hierarchical list of items, such as files and directories on a disk.
+
+==base==
+[[widget_object<category::widget_tag>]//./widgets/widget_object_widget_tag.htm] : public [[widget]]
+
+==events==
+[[general events]//./core/events.htm]
+#expanded(const [[arg_treebox]]&)#
+:occurs when a node is expanded or shrinked.
+#checked(const [[arg_treebox]]&)#
+:occurs when a node is checked or unchecked.
+#selected(const [[arg_treebox]]&)#
+:occurs when a node is selected or deselected.
+#hovered(const [[arg_treebox]]&)#
+:occurs when a user moves the cursor over a node.
+
+==member types==
+[[item_proxy]/widgets/treebox-item_proxy]
+:iterator to access item.
+node_image_type
+:state images for the node.
+[[renderer_interface]/widgets/treebox-renderer_interface]
+:the interface for user-defined renderer of node.
+[[compset_placer_interface]/widgets/treebox-compset_placer_interface]
+:the interface to define the position of components of a node.
+
+==member functions==
+(constructors)
+:construct the treebox instance
+decl=#treebox();#
+decl=#treebox(window parent, bool visible);#
+decl=#treebox(window parent, const rectangle& r, bool visible = true);#
+:Construct the treebox
+:0) Default constructor, it constructs the object of treebox, but it doesn't create UI element.
+:1,2) Constructs the instance and creates UI element of the treebox.
+--parameters--
+handle
+:a handle to a parent widget for the treebox widget.
+r
+:position and size of the treebox.
+visible
+:a boolean flag that specifies the visibility of the treebox after creating.
+--except--
+std::invalid_argument
+:if the parent handle is invalid.
+--end--
+
+auto_draw
+:enables/disables automatic drawing mode
+decl=#void auto_draw(bool enabled);#
+:When a certain operation is performed, treebox redraws for the updated state, this is a useful feature which keeps the treebox in the latest display state.
+:
+:But in some situations the fact that automatically performed drawing may be redundant, for example, appending items in a loop will performs redraw many times, it may cause low efficent. In this case, automatic drawing should be disabled before entering the loop, and then, re-enable automatic drawing after loop finished. When re-enable automatic drawing, the treebox will redraw for refresh UI.
+--parameters--
+enable
+:indicates whether to enable or disable the auto-draw.
+--end--
+
+avoid_drawing[#1.7]
+:performs a function 
+decl=#template<typename Function> void avoid_drawing(Function fn);#
+:It's a helper function that performs a specified function. It disables automatic drawing during performing, re-enables automatic drawing when it finishes. An implement of avoid_drawing
+```
+template<typename Function>
+void avoid_drawing(Function fn)
+{
+	this->auto_draw(false);
+	try
+	{
+		fn();
+	}
+	catch (...)
+	{
+		this->auto_draw(true);
+		throw;
+	}
+	this->auto_draw(true);
+}
+```
+--parameters--
+fn
+:an function object to perform
+--end--
+
+checkable
+:enables/disables the node to be checked
+decl=#treebox& checkable(bool enabled);#
+decl=#bool checkable() const;#
+:A checkable treebox shows a checkbox for every node to allow user to check the node.
+--parameters--
+enabled
+:indicates whether the treebox is checkable
+--returns--
+:0) The reference of #*this#.
+:1) #true# if the treebox is checkable, false otherwise.
+--end--
+
+find
+:finds a node
+decl=#[[item_proxy]/widgets/treebox-item_proxy] find(const std::string& path_key);#
+:Finds a node by the path of key.
+--parameters--
+path_key
+:path of a node
+--returns--
+:An item proxy to the found node.
+--end--
+
+make_key_path
+:returns the key path of the specified node
+decl=#std::string make_key_path([[item_proxy]/widgets/treebox-item_proxy] node, const std::string& splitter);#
+:returns the path of key.
+--parameters--
+node
+:item proxy to a node
+splitter
+:splitting text between nodes
+--returns--
+:The key path string.
+--end--
+
+placer
+:location of components within a node
+decl=#template<typename Placer> treebox& placer(const Placer& p);#
+decl=#const pat::cloneable<compset_placer_interface>& placer() const;#
+--parameters--
+p
+:a reference to the node component placer
+--returns--
+:0) The reference of #*this#.
+:1) The reference of current node component placer.
+--end--
+
+renderer
+:user-defined node renderer
+decl=#template<typename Renderer> treebox& renderer(const Renderer& rend);#
+decl=#const pat::cloneable<renderer_interface>& renderer() const;#
+--parameters--
+rend
+:a reference to a user-defined node renderer to be copied for the treebox.
+--returns--
+:0) The reference of #*this#.
+:1) The reference to current node renderer.
+--end--
+
+selected
+:returns the selected node
+decl=#[[item_proxy]/widgets/treebox-item_proxy] selected() const;#
+--end--
+
+---Modifiers---
+erase
+:erases a node
+decl=#[[item_proxy]/widgets/treebox-item_proxy] erase([[item_proxy]/widgets/treebox-item_proxy] node);#
+decl=#void erase(const std::string& path_key);#
+:Removes a specified node from the treebox.
+:  0) Removes the node.
+:  1) Removes the node using key path.
+--parameters--
+node
+:item proxy to the node to remove
+path_key
+:key path of node to remove
+--returns--
+:0) The item proxy following the removed node.
+--end--
+
+icon
+:returns an icon scheme
+decl=#node_image_type& icon(const std::string& name);#
+:Creates/returns an icon scheme correspending with the specified name. If the name doesn't exist, it creates one. The icon scheme includes 3 images for node states. These states are 'normal','hovered' and 'expanded'. If 'hovered' or 'expanded' is not set, it ueses 'normal' state image instead.
+:
+:Using the icon scheme.
+```
+//treebox tree;
+//Sets the images
+auto & img = tree.icon("ID1");
+img.normal.open("normal1.png");
+img.hovered.open("hovered1.png");
+img.expanded.open("expanded1.png");
+
+auto prx = tree.insert("root", "ROOT");
+prx.icon("ID1"); //Sets the scheme for this node.
+
+auto & img2 = tree.icon("ID2");
+img2.normal.open("normal2.png");
+img2.hovered.open("hovered2.png");
+img2.expanded.open("expanded2.png");
+//If hovered or expanded is not set, it uses normal image for these 2 states.
+
+prx = tree.insert("root/abc", "abc");
+prx.icon("ID2");
+tree.insert("root/def", "def").icon("ID2");
+//images ID2 are shared for item "abc" and "def".
+```
+--parameters--
+name
+:the name of an icon scheme. If the name is not existing, it creates a new scheme for the name.
+--returns--
+:The reference of the node icon scheme.
+--end--
+
+icon_erase
+:erases an icon scheme
+decl=#void icon_erase(const std::string& name);#
+--parameters--
+name
+:the name of image scheme to remove
+--end--
+
+insert
+:inserts a new node
+decl=#[[item_proxy]/widgets/treebox-item_proxy] insert(const std::string& path_key, std::string title);#
+decl=#[[item_proxy]/widgets/treebox-item_proxy] insert(item_proxy pos, const std::string& path_key, std::string title);#
+:Inserts a new node
+--parameters--
+path_key
+:a path for the new node
+pos
+:item proxy before which the node will be inserted
+title
+:title for the new node
+--returns--
+:An [[item_proxy]/widgets/treebox-item_proxy] to the new node.
+--end--
+
+---Operations---
+scroll_into_view
+:scrolls a specified node into view
+decl=#void scroll_into_view([[item_proxy]/widgets/treebox-item_proxy] node, align_v bearing);#
+decl=#void scroll_into_view([[item_proxy]/widgets/treebox-item_proxy] node);#
+:Scrolls a specified node int view.
+:  0) Scroll a node into view with a specified bearing position.
+:  1) Scroll a node into view, the bearing position depends on curent position of the node.
+--parameters--
+node
+:a node to be requested
+bearing
+:the position where the node in the view
+--end--
+
+
+==Remarks==
+:Loading directoris into the treebox
+```
+#include <nana/gui.hpp>
+#include <nana/gui/widgets/treebox.hpp>
+#include <nana/filesystem/filesystem.hpp>
+
+void tree_dir()
+{
+	using namespace nana;
+	form fm{ API::make_center(300, 300), appear::decorate<appear::taskbar>() };
+	fm.caption(L"Nana C++ Library - Treebox Sample.");
+
+	nana::treebox tree(fm, { 0, 0, 300, 300 });
+
+	namespace fs = nana::experimental::filesystem;
+#if defined(NANA_WINDOWS)
+	auto node = tree.insert("C:", "Local Drive(C:)");
+	fs::directory_iterator i("C:\\"), end;
+#elif defined(NANA_LINUX)
+	auto node = tree.insert("/", L"Root/");
+	fs::directory_iterator i("/"), end;
+#endif
+	for (; i != end; ++i)
+	{
+		if (!is_directory(*i)) continue;
+
+		auto name = to_utf8(i->path().filename().native());
+		tree.insert(node, name, name);
+		break;
+	}
+
+	tree.events().expanded([&tree](const arg_treebox& arg)
+	{
+		if (!arg.operated) return; //If this is contracted.
+
+		//Windows supports the path separator '/'
+		auto path = tree.make_key_path(arg.item, "/") + "/";
+
+		//Avoids frequent useless refreshing when every time it inersts a node
+		tree.avoid_drawing([&]{
+
+			//Walk in the path directory for sub directories.
+			for (fs::directory_iterator i{ path }, end; i != end; ++i)
+			{
+				if (!fs::is_directory(i->status())) continue; //If it is not a directory.
+
+				auto name = to_utf8(i->path().filename().native());
+				auto child = tree.insert(arg.item, name, name);
+				if (child.empty()) continue;
+
+				//Find a directory in child directory, if there is a directory,
+				//insert it into the child, just insert one node to indicate the
+				//node has a child and an arrow symbol will be?displayed in the
+				//front of the node.
+				for (fs::directory_iterator u{ path + name }; u != end; ++u)
+				{
+					if (!is_directory(*u)) continue; //If it is not a directory.
+					auto name = to_utf8(u->path().filename().native());
+					tree.insert(child, name, name);
+					break;
+				}
+			}
+		});
+	});
+
+	fm.show();
+	exec();
+}
+```

@@ -248,7 +248,7 @@ width
 auto_draw
 :enables/disables automatic drawing
 decl=#void auto_draw(bool enable);#
-:When an operation was performed, listbox will perform a draw for the updated state, this is a useful feature which makes the listbox in the latest display state.
+:When a certain operation is performed, listbox redraws for the updated state, this is a useful feature which makes the listbox in the latest display state.
 :
 :But in some situations the fact that automatically performed drawing may be redundant, for example, appending items in a loop will performs redraw many times, it may cause low efficent. In this case, automatic drawing should be disabled before entering the loop, and then, re-enable automatic drawing after loop finished. When re-enable automatic drawing, the listbox will perform drawing for refresh UI.
 --parameters--
