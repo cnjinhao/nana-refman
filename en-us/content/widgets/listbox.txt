@@ -152,6 +152,30 @@ std::out_of_range
 :if #!(pos < column_size())#
 --end--
 
+column_movable[#1.7]
+:enables/disables the movement of the column
+decl=#void column_movable(bool movable);#
+decl=#bool column_movable() const;#
+:When the column is not movable, user can't move a column by dragging it.
+--parameters--
+movable
+:Indicates whether the column can be moved.
+--returns--
+:1) #true# if the column can be moved, #false# otherwise.
+--end--
+
+column_resizable[#1.7]
+:enables/disables the resizability of the column.
+decl=#void column_resizable(bool resizable);#
+decl=#bool column_resizable() const;#
+:When the column is not resizable, it doesn't show a west-east cursor when user moves the cursor to a gap between two columns, and the column can't be resized by dragging the gap.
+--parameters--
+resizable
+:Indicates whether the column can be resized.
+--returns--
+:1) #true# if the column can be resized, #false# otherwise.
+--end--
+
 column_size
 :returns the number of columns
 decl=#size_type column_size() const;#
