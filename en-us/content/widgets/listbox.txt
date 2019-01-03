@@ -152,6 +152,17 @@ std::out_of_range
 :if #!(pos < column_size())#
 --end--
 
+column_from_pos
+:returns the position of column by a specified point
+decl=#size_type column_from_pos(const point & pos) const;#
+:Returns the absolute position of column which contains the specified point.
+--parameters--
+pos
+:the point to be checked
+--returns--
+:the absolute position of the column, #nana::npos# otherwise.
+--end--
+
 column_movable[#1.7]
 :enables/disables the movement of the column
 decl=#void column_movable(bool movable);#
@@ -365,6 +376,16 @@ category_limited
 :indicates whether the user is allowed to select/check another item in different categories. If this parameter is #true#, the user can select/check another item in different categories. If the parameter is #false#, the user only can select/check one item in all categories.
 --end--
 
+hovered[#1.7]
+:returns the hovered item
+decl=#index_pair hovered(bool return_end) const;#
+--parameters--
+return_end
+:indicates whether to return an end position instead of empty position if no item is hovered.
+--returns--
+:The position of the hovered item. If return_end is true, it returns the position next to the last item of last category if no item is hovered.
+--end--
+
 scroll[#1.2]
 :scrolls the view to the bottom/top
 decl=#void scroll(bool to_bottom, size_type cat_pos = ::nana::npos);#
@@ -460,16 +481,23 @@ std::out_of_range
 :if pos is invalid.
 --end--
 
-insert_item
+insert_item[#1.7]
 :inserts a new item
 decl=#void insert_item(const index_pair& abs_pos, std::string text);#
 decl=#void insert_item(const index_pair& abs_pos, std::wstring text);#
-:Inserts an item before a specified absolute position.
+decl=#void insert_item(index_pair abs_pos, const listbox& rhs, const index_pairs& indexes);#[#1.7]
+:Inserts new item(s)
+:  0,1) Inserts an item before a specified absolute position.
+:  2) Copies items from an existing listbox.
 --parameters--
 abs_pos
 :the absolute position before which an item will be inserted.
 text
 :the title of the new item, #std::string# is for UTF-8 encoded string.
+rhs
+:another listbox which provides items to be copied.
+indexes
+:indexes of the items to be copied.
 --except--
 std::out_of_range
 :if abs_pos is invalid.
@@ -564,6 +592,30 @@ void unsort()
 ```
 --end--
 
+---Visible range---
+first_visible[#1.7]
+:returns first visible element
+decl=#index_pair first_visible() const;#
+:It may return an item or a category item.
+--returns--
+:the index of first visible element.
+--end--
+
+last_visible[#1.7]
+:returns last visible element
+decl=#index_pair last_visible() const;#
+:It may return an item or a category item.
+--returns--
+:the index of last visible element.
+--end--
+
+visibles[#1.7]
+:returns all visible items
+decl=#index_pairs visibles() const;#
+:It returns all visible items that are displayed in listbox window area.
+--returns--
+:index_pairs containg all visible items.
+--end--
 
 ==remark==
 :Before appending items to the listbox, a header has to be created. The header describes columns of the listbox.
