@@ -1,0 +1,6 @@
+|name	=nana::simple_dragdrop
+|header	=<nana/gui/dragdrop.hpp>
+|decl	=#class simple_dragdrop;#
+:The class simple_dragdrop is used for easily implementing data exchange using drag&drop feature in current process.
+:
+:
