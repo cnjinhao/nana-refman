@@ -86,7 +86,10 @@ int main()
 	form fm;	
 	drawing dw{fm};
 	dw.draw([](paint::graphics& graph){
-		graph.line({10, 10}, {20, 20});
+		graph.line(
+			{10, 10},
+			{20, 20},
+			colors::black);
 
 		//A drawing function should not resize the graphics
 		//graph.size({new_width, new_height});
