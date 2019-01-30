@@ -195,6 +195,35 @@ decl=#size_type column_size() const;#
 :The number of columns in the listbox.
 --end--
 
+move_column[#1.7]
+:moves column to the view position
+decl=#void move_column(size_type abs_pos, size_type view_pos);#
+:Moves a column at specified position to a position where it will be shown.
+:If abs_pos or view_pos is out of range, this function does nothing.
+--parameters--
+abs_pos
+:The absolute position of column object in the listbox
+view_pos
+:The position where the column is shown.
+--end--
+
+reorder_columns[#1.7]
+:sorts columns
+decl=#void reorder_columns(size_type first_col, size_type last_col, index_pair row, bool reverse, std::function<bool(const std::string&,size_type,std::string&,size_type,const any* rowval, bool)> comp)#
+:Sorts columns in range[first_col, last_col] inclusive using a row.
+--parameters--
+first_col
+:The absolute position of the first column
+last_col
+:The absolute position of the last column
+row
+:Position of an item which is used for comparing
+reverse
+:reversely comparing
+comp
+:a weak ordering comparer
+--end--
+
 ---Element access---
 at
 :access a spcecifed content with bounds checking
@@ -365,7 +394,7 @@ any exception
 --end--
 
 enable_single/disable_single
-:Enables/disables single selection
+:enables/disables single selection/check
 decl=#void disable_single(bool for_selection);#
 decl=#void enable_single(bool for_selection, bool category_limited);#
 :Enables/disables the listbox whether the user is allowed to select/check more than one item at a time.
@@ -376,9 +405,32 @@ category_limited
 :indicates whether the user is allowed to select/check another item in different categories. If this parameter is #true#, the user can select/check another item in different categories. If the parameter is #false#, the user only can select/check one item in all categories.
 --end--
 
+is_single_enabled[#1.7]
+:determines whether the single selection/check is enabled
+decl=#bool is_single_enabled(bool for_selection) const noexcept;#
+:Determines whether the single selection/check is enabled.
+--parameters--
+for_selection
+:indicates whether the operation is applied for selection or is applied for check of an item.
+--returns--
+:#true# if the single selection/check is enabled, #false# otherwise. 
+--end--
+
+
 hovered[#1.7]
 :returns the hovered item
 decl=#index_pair hovered(bool return_end) const;#
+:It returns the position of hovered item. When there is not a hovered item, it returns an empty position or end position depending on the parameter return_end.
+```
+if(list.hovered(false).empty())
+{
+	//No item is hovered.
+}
+
+//Inserts the all selected items in list to the list2 at the position of the hovered.
+//If there is not a hovered item, the selected items are appended to the list2.
+list2.insert_item(list2.hovered(true), list, list.selected());
+```
 --parameters--
 return_end
 :indicates whether to return an end position instead of empty position if no item is hovered.

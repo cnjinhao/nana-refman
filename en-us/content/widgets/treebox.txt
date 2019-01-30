@@ -260,17 +260,19 @@ void tree_dir()
 
 	nana::treebox tree(fm, { 0, 0, 300, 300 });
 
-	namespace fs = nana::experimental::filesystem;
+	namespace fs = std::filesystem;
 #if defined(NANA_WINDOWS)
 	auto node = tree.insert("C:", "Local Drive(C:)");
-	fs::directory_iterator i("C:\\"), end;
+	fs::directory_iterator i("C:\\", fs::directory_options::skip_permission_denied), end;
 #elif defined(NANA_LINUX)
 	auto node = tree.insert("/", L"Root/");
-	fs::directory_iterator i("/"), end;
+	fs::directory_iterator i("/", fs::directory_options::skip_permission_denied), end;
 #endif
+
+	std::error_code err_code;
 	for (; i != end; ++i)
 	{
-		if (!is_directory(*i)) continue;
+		if (!is_directory(*i, err_code)) continue;
 
 		auto name = to_utf8(i->path().filename().native());
 		tree.insert(node, name, name);
@@ -285,12 +287,12 @@ void tree_dir()
 		auto path = tree.make_key_path(arg.item, "/") + "/";
 
 		//Avoids frequent useless refreshing when every time it inersts a node
-		tree.avoid_drawing([&]{
-
+		tree.avoid_drawing([&] {
+			std::error_code err_code;
 			//Walk in the path directory for sub directories.
-			for (fs::directory_iterator i{ path }, end; i != end; ++i)
+			for (fs::directory_iterator i{ path, fs::directory_options::skip_permission_denied }, end; i != end; ++i)
 			{
-				if (!fs::is_directory(i->status())) continue; //If it is not a directory.
+				if (!fs::is_directory(*i, err_code)) continue; //If it is not a directory.
 
 				auto name = to_utf8(i->path().filename().native());
 				auto child = tree.insert(arg.item, name, name);
@@ -300,9 +302,9 @@ void tree_dir()
 				//insert it into the child, just insert one node to indicate the
 				//node has a child and an arrow symbol will be?displayed in the
 				//front of the node.
-				for (fs::directory_iterator u{ path + name }; u != end; ++u)
+				for (fs::directory_iterator u{ path + name, fs::directory_options::skip_permission_denied }; u != end; ++u)
 				{
-					if (!is_directory(*u)) continue; //If it is not a directory.
+					if (!is_directory(*u, err_code)) continue; //If it is not a directory.
 					auto name = to_utf8(u->path().filename().native());
 					tree.insert(child, name, name);
 					break;
