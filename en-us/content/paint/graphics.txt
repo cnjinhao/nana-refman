@@ -1,7 +1,7 @@
 |name	=nana::paint::graphics
 |header	=<nana/paint/graphics.hpp>
-|decl	=#class graphis;#
-:The #class# graphics is a 2D graphics renderer. It holds an off-screen memory buffer and provides some drawing functions for rendering 2D shapes, text and images on the ownd off-screen buffer.
+|decl	=#class graphics;#
+:The #class# graphics is a 2D graphics renderer. It holds an off-screen memory buffer and provides some drawing functions for rendering 2D shapes, text and images on the owned off-screen buffer.
 :
 :The off-screen buffer can be shared with multiple objects of graphics. When a graphics object creates a new off-screen buffer, it firstly releases the ownership of the owned off-screen buffer.
 
@@ -15,7 +15,7 @@ decl=#graphics(const nana::size& sz);#
 :Constructs the graphics
 :  0) Default constructor, it creates an empty graphics.
 :  1) Copy constructor, it creates a graphics with other as the other refers to the graphics object.
-:  2) Move constructor, it move-constructs a graphics from other. After the construction, #*this# contains a copy of previous state of other, other is empty.
+:  2) Move constructor, it move-constructs a graphics from other. After the construction, #*this# contains a copy of previous state of other and other is empty.
 :  3) Constructs a graphics with a specified dimension, in pixels.
 --parameters--
 other
