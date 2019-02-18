@@ -1,0 +1,256 @@
+|name	=nana::treebox::item_proxy
+|header	=<nana/gui/widgets/treebox.hpp>
+|decl	=#class item_proxy;#
+:The class item_proxy is a manipulator of treebox node. it is also based on concept of [[Input Iterator]//http://www.sgi.com/tech/stl/InputIterator.html]
+
+==member functions==
+(constructors)
+:construct the item_proxy instance
+decl=#The default constructor creates an end iterator();#
+--end--
+
+append
+:appends a node
+decl=#item_proxy append(const std::string& key, std::string title);#
+decl=#template<typename Value> item_proxy append(const std::string& key, std::string title, Value&& val);#
+:Appends a child node to current node.
+:  0) Appends a child.
+:  1) Appends a child with a specified value.
+:
+:If the specified key is existing in current node, it replaces title and value of the node with the specified title and value.
+--parameters--
+key
+:a key for new node
+title
+:a title for new node
+val
+:a value object
+--except--
+std::bad_alloc
+:if memory is out enough.
+--returns--
+:An item_proxy to the appended node.
+--end--
+
+check/checked
+:checks/unchecks the node
+decl=#item_proxy& check(bool cs);#
+decl=#bool checked() const;#
+:When a node is checked, the treebox draws a crook to indicates the check state.
+:  0) Checks or unchecks the node.
+:  1) Determines whether the node is checked.
+--parameters--
+cs
+:indicates whether to check or uncheck the node
+--returns--
+:0) The referencefo #*this#.
+:1) #true# if the node is checked, #false# otherwise.
+--end--
+
+expand/expanded
+:expands/shrinks child nodes
+decl=#item_proxy& expand(bool exp);#
+decl=#bool expanded() const;#
+:If a node has at least one child node, it can be expanded or shrinked.
+:  0) Expands or shrinks the child nodes.
+:  1) Determines whether the child nodes are expanded.
+--parameters--
+exp
+:indicates whether to expand or shrink the child nodes.
+--returns--
+:0) The reference of #*this#.
+:1) #true# if the node is expanded, #false# otherwise.
+--end--
+
+empty
+:determines if it is empty
+decl=#bool empty() const;#
+:Determines whether it doesn't not refer to a node, as an end iterator.
+--returns--
+:#true# if it is empty, #false# otherwise.
+--end--
+
+icon
+:sets icon scheme
+decl=#item_proxy& icon(const std::string& name);#
+decl=#const std::string& icon() const;
+:The icon scheme contains 3 images for the states of a node. It renders one of these images depending on the node state.
+:  0) Sets a new icon scheme. If name is empty, it clears the image scheme.
+:  1) Returns the icon name.
+:
+:Every node refers a node image scheme which is maintained by treebox.
+--parameters--
+name
+:name of an icon scheme
+--returns--
+:0) The reference of #*this#.
+:1) The name of current icon scheme.
+--see also--
+[[treebox]]::icon
+--end--
+
+key
+:key of the node
+decl=#item_proxy& key(const std::string& key_str);#
+decl=#const std::string& key() const;#
+:Sets/returns the key of the node.
+:  0) Modifies the key of the node. If the new key is existing in same level, the modification has no effect.
+:  1) Returns the key of the node.
+--parameters--
+key_str
+:a new key to modify
+--returns--
+:0) The key of the node.
+:1) The reference of #*this#.
+--end--
+
+level
+:returns the depth between the root node and current node
+decl=#std::size_t level() const;#
+--returns--
+:The depth.
+--end--
+
+select/selected
+:selects/deselects the node
+decl=#item_proxy& select(bool sel);#
+decl=#bool selected() const;#
+:Manipulates the selecting state of the node.
+:  0) Selects/deselects the node.
+:  1) Determines whether the node is selected.
+--parameters--
+sel
+:indicates whether to select or deselect the node.
+--returns--
+:0) The reference of #*this#.
+:1) #true# if the nde is selected, #false# otherwise.
+--end--
+
+size
+:returns the number of child nodes
+decl=#std::size_t size() const;#
+:Returns the number of child nodes, not recursivly.
+--returns--
+:The number of child nodes.
+--end--
+
+text
+:node text
+decl=#const std::string& text() const;#
+decl=#item_proxy& text(const std::string& text_str);#
+:Text of the node
+:  0) Returns the text of the node.
+:  1) Modifies the text of the node.
+--parameters--
+text_str
+:new title of the node to set
+--returns--
+:0) Text of the node.
+:1) The referece of #*this#.
+--end--
+
+---Element access---
+begin/end
+:behaves as a container
+decl=#item_proxy begin() const;#
+decl=#item_proxy end() const;#
+:Support of range-for.
+:  0) Returns an item_proxy to the first chlid node, as begin iterator.
+:  1) Returns an empty item_proxy, as end iterator.
+:The begin() is equal to item_proxy::child().
+--returns--
+:0) An item_proxy to the first child node.
+:1) An empty item_proxy.
+--see also--
+item_proxy::child
+--end--
+
+chlid
+:returns the first child of the node
+decl=#item_proxy child() const;#
+:Returns the first child of the node. It is equal to item_proxy::begin().
+--returns--
+:An iterator to the first child node.
+--seel also--
+:item_proxy::begin
+--end--
+
+owner
+:returns the owner of the node
+decl=#item_proxy owner() const;#
+--returns--
+:An item_proxy to the owner of the node.
+--end--
+
+sibling
+:returns the sibling of the node
+decl=#item_proxy sibling() const;#
+:Returns the following sibling of the node.
+--returns--
+:An item_proxy to the sibling of the node.
+--end--
+
+visit_recursively
+:applies a function to all child nodes
+decl=#item_proxy visit_recursively(std::function<bool(item_proxy)> pred);#
+:It visits nodes and its childs nodes recursively, and applies a function to these nodes. It stops visiting when the function returns #false#, then returns a item_proxy for which the function returns #false#.
+--parameters--
+pred
+:unary predicate which return #true# for more visiting
+--returns--
+:The item_proxy which applied to the function and the function returns #false#.
+--end--
+
+---Iterators---
+operator++
+:increment iterator
+decl=#item_proxy& operator++();#
+decl=#item_proxy operator++(int)#
+:Increment iterator.
+:  0) Moves the item proxy to the next item.
+:  1) Returns a item proxy to the current item, and this category proxy moves to the next item. 
+--returns--
+:The reference of #*this#.
+--end--
+
+operator*
+:access the item
+decl=#item_proxy& operator*();#
+decl=#const item_proxy& operator*() const;#
+:Access the item for the STL iterator syntax.
+--returns--
+:The reference of #*this#.
+--end--
+
+operator->
+:access the item
+decl=#item_proxy* operator->();#
+decl=#item_proxy* operator->() const;#
+:Access the item for the STL iterator syntax.
+--returns--
+:The pointer to the item.
+--end--
+
+operator==/operator!=
+:comparison operators
+decl=#bool operator==(const item_proxy& other) const;#
+decl=#bool operator!=(const item_proxy& other) const;#
+decl=#bool operator==(const char* u8str) const;#
+decl=#bool operator==(const wchar_t* str) const;#
+decl=#bool operator==(const std::string& u8str) const;#
+decl=#bool operator==(const std::wstring& str) const;#
+:Comparison operators
+:  0,1) Checks whether the given 2 item_proxy iterators are the same.
+:  2,3,4,5) Determines whether the text of the option is equal to the specified string.
+--parameters--
+other
+:an item proxy to be compared
+u8str
+:a UTF-8 encoded string
+str
+:a wide string
+--returns--
+:0) #true# if they are same, #false# otherwise.
+:1) #true# if they are not same, #false# otherwise.
+:2,3,4,5) #true# if the text of the node is equal to the specified string, #false# otherwise.
+--end--

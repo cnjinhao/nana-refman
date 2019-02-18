@@ -1,0 +1,30 @@
+|name	=nana::arg_treebox
+|header	=<nana/gui/widgets/treebox.hpp>
+|decl	=#struct arg_treebox;#
+:The struct arg_treebox is a type of treebox event parameter.
+
+==base==
+[[event_arg]//http://nanapro.org/en-us/documentation/core/events.htm]
+
+
+==data members==
+widget
+:where the event occurs
+item
+:the node to be operated
+operated
+:indicates operation state of the event
+
+==remark==
+:The member *operated* indicates the latest operation state of the event. 
+:
+:0) When event *selected* occurs, the *operated* indicates the new selecting state. If it is #true#, it indicates the node is selected, #false# otherwise.
+:
+:1) When event *expanded* occus, the *operated* indicates whether the child nodes are expanded. If it is #true#, it indicates the child nodes are expanded, #false# otherwise.
+:
+:2) When event *hovered* occurs, the *operated* indicates whether the node is hovered. If it is #true#, it indicates the node is hovered, #false# otherwise.
+:
+:3) When event *checked* occurs, the *operated* indicates whether the node is checked. If it is #true#, it indicates the node is checked, #false# otherwise.
+
+==see also==
+[[general events]//http://nanapro.org/en-us/documentation/core/events.htm], [[treebox]]

@@ -152,12 +152,76 @@ std::out_of_range
 :if #!(pos < column_size())#
 --end--
 
+column_from_pos
+:returns the position of column by a specified point
+decl=#size_type column_from_pos(const point & pos) const;#
+:Returns the absolute position of column which contains the specified point.
+--parameters--
+pos
+:the point to be checked
+--returns--
+:the absolute position of the column, #nana::npos# otherwise.
+--end--
+
+column_movable[#1.7]
+:enables/disables the movement of the column
+decl=#void column_movable(bool movable);#
+decl=#bool column_movable() const;#
+:When the column is not movable, user can't move a column by dragging it.
+--parameters--
+movable
+:Indicates whether the column can be moved.
+--returns--
+:1) #true# if the column can be moved, #false# otherwise.
+--end--
+
+column_resizable[#1.7]
+:enables/disables the resizability of the column.
+decl=#void column_resizable(bool resizable);#
+decl=#bool column_resizable() const;#
+:When the column is not resizable, it doesn't show a west-east cursor when user moves the cursor to a gap between two columns, and the column can't be resized by dragging the gap.
+--parameters--
+resizable
+:Indicates whether the column can be resized.
+--returns--
+:1) #true# if the column can be resized, #false# otherwise.
+--end--
+
 column_size
 :returns the number of columns
 decl=#size_type column_size() const;#
 :Returns the number of columns in the listbox.
 --returns--
 :The number of columns in the listbox.
+--end--
+
+move_column[#1.7]
+:moves column to the view position
+decl=#void move_column(size_type abs_pos, size_type view_pos);#
+:Moves a column at specified position to a position where it will be shown.
+:If abs_pos or view_pos is out of range, this function does nothing.
+--parameters--
+abs_pos
+:The absolute position of column object in the listbox
+view_pos
+:The position where the column is shown.
+--end--
+
+reorder_columns[#1.7]
+:sorts columns
+decl=#void reorder_columns(size_type first_col, size_type last_col, index_pair row, bool reverse, std::function<bool(const std::string&,size_type,std::string&,size_type,const any* rowval, bool)> comp)#
+:Sorts columns in range[first_col, last_col] inclusive using a row.
+--parameters--
+first_col
+:The absolute position of the first column
+last_col
+:The absolute position of the last column
+row
+:Position of an item which is used for comparing
+reverse
+:reversely comparing
+comp
+:a weak ordering comparer
 --end--
 
 ---Element access---
@@ -248,7 +312,7 @@ width
 auto_draw
 :enables/disables automatic drawing
 decl=#void auto_draw(bool enable);#
-:When an operation was performed, listbox will perform a draw for the updated state, this is a useful feature which makes the listbox in the latest display state.
+:When a certain operation is performed, listbox redraws for the updated state, this is a useful feature which makes the listbox in the latest display state.
 :
 :But in some situations the fact that automatically performed drawing may be redundant, for example, appending items in a loop will performs redraw many times, it may cause low efficent. In this case, automatic drawing should be disabled before entering the loop, and then, re-enable automatic drawing after loop finished. When re-enable automatic drawing, the listbox will perform drawing for refresh UI.
 --parameters--
@@ -330,7 +394,7 @@ any exception
 --end--
 
 enable_single/disable_single
-:Enables/disables single selection
+:enables/disables single selection/check
 decl=#void disable_single(bool for_selection);#
 decl=#void enable_single(bool for_selection, bool category_limited);#
 :Enables/disables the listbox whether the user is allowed to select/check more than one item at a time.
@@ -339,6 +403,39 @@ for_selection
 :indicates whether the operation is applied for selection or is applied for check of an item.
 category_limited
 :indicates whether the user is allowed to select/check another item in different categories. If this parameter is #true#, the user can select/check another item in different categories. If the parameter is #false#, the user only can select/check one item in all categories.
+--end--
+
+is_single_enabled[#1.7]
+:determines whether the single selection/check is enabled
+decl=#bool is_single_enabled(bool for_selection) const noexcept;#
+:Determines whether the single selection/check is enabled.
+--parameters--
+for_selection
+:indicates whether the operation is applied for selection or is applied for check of an item.
+--returns--
+:#true# if the single selection/check is enabled, #false# otherwise. 
+--end--
+
+
+hovered[#1.7]
+:returns the hovered item
+decl=#index_pair hovered(bool return_end) const;#
+:It returns the position of hovered item. When there is not a hovered item, it returns an empty position or end position depending on the parameter return_end.
+```
+if(list.hovered(false).empty())
+{
+	//No item is hovered.
+}
+
+//Inserts the all selected items in list to the list2 at the position of the hovered.
+//If there is not a hovered item, the selected items are appended to the list2.
+list2.insert_item(list2.hovered(true), list, list.selected());
+```
+--parameters--
+return_end
+:indicates whether to return an end position instead of empty position if no item is hovered.
+--returns--
+:The position of the hovered item. If return_end is true, it returns the position next to the last item of last category if no item is hovered.
 --end--
 
 scroll[#1.2]
@@ -436,16 +533,23 @@ std::out_of_range
 :if pos is invalid.
 --end--
 
-insert_item
+insert_item[#1.7]
 :inserts a new item
 decl=#void insert_item(const index_pair& abs_pos, std::string text);#
 decl=#void insert_item(const index_pair& abs_pos, std::wstring text);#
-:Inserts an item before a specified absolute position.
+decl=#void insert_item(index_pair abs_pos, const listbox& rhs, const index_pairs& indexes);#[#1.7]
+:Inserts new item(s)
+:  0,1) Inserts an item before a specified absolute position.
+:  2) Copies items from an existing listbox.
 --parameters--
 abs_pos
 :the absolute position before which an item will be inserted.
 text
 :the title of the new item, #std::string# is for UTF-8 encoded string.
+rhs
+:another listbox which provides items to be copied.
+indexes
+:indexes of the items to be copied.
 --except--
 std::out_of_range
 :if abs_pos is invalid.
@@ -540,6 +644,30 @@ void unsort()
 ```
 --end--
 
+---Visible range---
+first_visible[#1.7]
+:returns first visible element
+decl=#index_pair first_visible() const;#
+:It may return an item or a category item.
+--returns--
+:the index of first visible element.
+--end--
+
+last_visible[#1.7]
+:returns last visible element
+decl=#index_pair last_visible() const;#
+:It may return an item or a category item.
+--returns--
+:the index of last visible element.
+--end--
+
+visibles[#1.7]
+:returns all visible items
+decl=#index_pairs visibles() const;#
+:It returns all visible items that are displayed in listbox window area.
+--returns--
+:index_pairs containg all visible items.
+--end--
 
 ==remark==
 :Before appending items to the listbox, a header has to be created. The header describes columns of the listbox.
