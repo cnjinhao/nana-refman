@@ -4,7 +4,7 @@
 :A type of listbox event.
 
 ==base==
-[[event_arg]//http://]
+[[event_arg]//./core/events.htm]
 
 ==member types==
 item

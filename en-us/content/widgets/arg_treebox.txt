@@ -4,7 +4,7 @@
 :The struct arg_treebox is a type of treebox event parameter.
 
 ==base==
-[[event_arg]//http://nanapro.org/en-us/documentation/core/events.htm]
+[[event_arg]//./core/events.htm]
 
 
 ==data members==
@@ -27,4 +27,4 @@ operated
 :3) When event *checked* occurs, the *operated* indicates whether the node is checked. If it is #true#, it indicates the node is checked, #false# otherwise.
 
 ==see also==
-[[general events]//http://nanapro.org/en-us/documentation/core/events.htm], [[treebox]]
+[[general events]//./core/events.htm], [[treebox]]
