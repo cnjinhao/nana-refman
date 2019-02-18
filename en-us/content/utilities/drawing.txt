@@ -1,9 +1,11 @@
 |name	=nana::drawing
 |header	=<nana/gui.hpp>
 |decl	=#class drawing;#
-:The class drawing registers painting and drawing functions for a specified widget. The functions are called on everytime the widget get refreshed.
-:
-:The registered functions aren't destroyed when destructs the drawing object. The functions only can be deleted by explicity calling #drawing::erase()#/#drawing::clear()# or the destruction of the specified widget.
+
+:The class drawing registers painting and drawing functions for a specified widget.  The widget is specified by passing its handle to the drawing constructor.   The functions will then be called each time the widget is refreshed.
+
+:The registered functions are owned by the specified widget.  They are not destroyed when the drawing object goes out of scope and is destroyed.  To stop the registered functions from being called when the specified widget is refreshed they must be deleted explicitly by calling drawing::erase()/drawing::clear().
+
 
 ==member types==
 draw_fn_t
