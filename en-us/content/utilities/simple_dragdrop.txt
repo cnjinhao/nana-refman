@@ -1,6 +1,116 @@
 |name	=nana::simple_dragdrop
 |header	=<nana/gui/dragdrop.hpp>
 |decl	=#class simple_dragdrop;#
-:The class simple_dragdrop is used for easily implementing data exchange using drag&drop feature in current process.
+:The class simple_dragdrop is used for easily implementing data exchange using drag-and-drop feature in current process.
 :
+:The class simple_dragdrop informs program when drag-and-drop operation is done. It doesn't hold the data which is exchanged during drag-and-drop operation.
 :
+:When a simple_dragdrop object is constructed, the associated window is enabled for drag-and-drop operation. When the object is destructed, the associated window is disabled for drag-and-drop operation.
+
+==member functions==
+constructor
+:constructs an instance
+decl=#simple_dragdrop(window source);#
+decl=#simple_dragdrop(const simple_dragdrop&) = delete;#
+decl=#simple_dragdrop& operator=(const simple_dragdrop&) = delete;#
+decl=#simple_dragdrop(simple_dragdrop&&) = delete;#
+decl=#simple_dragdrop& operator=(simple_dragdrop&&) = delete;#
+:Constructs an instance.
+:  0) Constructs an instance with a window. When the instance is instanced, the window immediately becomes dragdrop source window that user can drag the draggable content out of the window.
+:  1,2,3,4) The copy and move constructors are deleted. The object of simple_dragdrop is not copyable and movable.
+
+--parameters--
+source
+:Handle to a window that can be a source for drag-and-drop operation.
+--except--
+std::invalid_argument
+:throws if source is invalid.
+--end--
+
+condition
+:sets a condition checker
+decl=#void condition(std::function<bool()> predicate_fn);#
+:Sets a condition checker that determines whether the drag-and-drop operation can start.
+--parameters--
+predicate_fn
+:Unary predicate which returns #true# for starting drag-and-drop operation.
+--end--
+
+make_drop
+:sets a drop target
+decl=#void make_drop(window target, std::function<void()> drop_fn);#
+:Sets a drop target and a drop function. When user releases the mouse button during drag-and-drop operation, the simple_dragdrop calls the drop function.
+--parameters--
+target
+:Handle to a window that can be a target for drag-and-drop operation.
+drop_fn
+:Function which is called when user releases the mouse button if the mouse is hovered on the target window.
+--end--
+
+==remark==
+:The class simple_dragdrop informs program using a callback when the drag-and-drop operation is done.
+```
+#include <nana/gui.hpp>
+#include <nana/gui/widgets/listbox.hpp>
+#include <nana/gui/dragdrop.hpp>
+
+int main()
+{
+    using namespace nana;
+
+    form fm;
+    listbox list1{ fm };
+    listbox list2{ fm };
+
+    list1.append_header("column");
+    list2.append_header("column");
+
+    //Add items
+    list1.avoid_drawing([&]{
+        for (int i = 0; i < 100; ++i)
+            list1.at(0).append({ "item " + std::to_string(i) });
+    });
+
+    fm.div("<list1><weight=10%><list2>");
+    fm["list1"] << list1;
+    fm["list2"] << list2;
+    fm.collocate();
+
+    fm.show();
+
+    //Enables drag&drop from list1 to list2
+    simple_dragdrop smpl_dnd{ list1 };
+
+	//Let's set a condition checker which returns true if the mouse is hovered
+	//on an item of list1.
+	//When the left mouse button is pressed and the condition checker returns true,
+	//the drag-and-drop will start.
+    smpl_dnd.condition([&list1]{
+        return !list1.hovered(false).empty();
+    });
+
+    //Sets the drop target and specifies a function to transfer
+    //data from list1 to list2.
+	//When the mouse button is dragged from list1 to list2 and is released on list2, the
+	//simple_dragdrop will call the callback to inform the program that drag-and-drop
+	//operation is done. Then the program should transfer the data for the operation.
+    smpl_dnd.make_drop(list2, [&]{
+        auto selections = list1.selected();
+
+		//Transfers the data
+        list2.avoid_drawing([&]{
+            for (auto & s : selections)
+            {
+                list2.at(0).append({ list1.at(s.cat).at(s.item).text(0) });
+            }
+        });
+
+        list1.erase(selections);
+    });
+
+    exec();
+}
+```
+
+==see also==
+[[dragdrop]/utilities/dragdrop]
