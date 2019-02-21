@@ -248,15 +248,9 @@ bearing
 ==remark==
 :Loading directoris into the treebox
 ```
-#include <nana/gui.hpp>
-#include <nana/gui/widgets/treebox.hpp>
-#include <nana/filesystem/filesystem.hpp>
-
-void tree_dir()
-{
 	using namespace nana;
 	form fm{ API::make_center(300, 300), appear::decorate<appear::taskbar>() };
-	fm.caption(L"Nana C++ Library - Treebox Sample.");
+	fm.caption("Nana C++ Library - Treebox Sample.");
 
 	nana::treebox tree(fm, { 0, 0, 300, 300 });
 
@@ -265,7 +259,7 @@ void tree_dir()
 	auto node = tree.insert("C:", "Local Drive(C:)");
 	fs::directory_iterator i("C:\\", fs::directory_options::skip_permission_denied), end;
 #elif defined(NANA_LINUX)
-	auto node = tree.insert("/", L"Root/");
+	auto node = tree.insert("/", "Root/");
 	fs::directory_iterator i("/", fs::directory_options::skip_permission_denied), end;
 #endif
 
@@ -274,7 +268,7 @@ void tree_dir()
 	{
 		if (!is_directory(*i, err_code)) continue;
 
-		auto name = to_utf8(i->path().filename().native());
+		auto name = i->path().filename().u8string();
 		tree.insert(node, name, name);
 		break;
 	}
@@ -294,7 +288,7 @@ void tree_dir()
 			{
 				if (!fs::is_directory(*i, err_code)) continue; //If it is not a directory.
 
-				auto name = to_utf8(i->path().filename().native());
+				auto name = i->path().filename().u8string();
 				auto child = tree.insert(arg.item, name, name);
 				if (child.empty()) continue;
 
@@ -305,7 +299,7 @@ void tree_dir()
 				for (fs::directory_iterator u{ path + name, fs::directory_options::skip_permission_denied }; u != end; ++u)
 				{
 					if (!is_directory(*u, err_code)) continue; //If it is not a directory.
-					auto name = to_utf8(u->path().filename().native());
+					auto name = u->path().filename().u8string();
 					tree.insert(child, name, name);
 					break;
 				}
@@ -315,5 +309,4 @@ void tree_dir()
 
 	fm.show();
 	exec();
-}
 ```
