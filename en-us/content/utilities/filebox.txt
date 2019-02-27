@@ -118,7 +118,7 @@ text
 :0) the old title.
 --end--
 
----Observers--
+---Observers---
 file/files[#!1.7]
 :selected files
 decl=#std::string file() const;#[#!1.7]
@@ -136,7 +136,7 @@ decl=#const path_type& path() const;#[#1.7]
 :parent path of selected file.
 --end--
 
----Operations--
+---Operations---
 show/operator()
 :shows dialog of filebox
 decl=#bool show() const;#[#!1.7]
@@ -171,4 +171,3 @@ int main()
     }
 }
 ```
---end--
