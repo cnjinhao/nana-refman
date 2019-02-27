@@ -1,0 +1,174 @@
+|name	=nana::filebox
+|header	=<nana/gui/filebox.hpp>
+|decl	=#class filebox;#
+:The class filebox creates an open/save dialog box to let user select the name of a file.
+
+==member types==
+path_type
+:a typedef name of std::filesystem::path.
+
+==member functions==
+(constructors)
+:constructs the filebox instance
+decl=#filebox(bool is_open_mode);#[#!1.7]
+decl=#filebox(window owner, bool is_open_mode);#
+decl=#filebox(const filebox& other);#
+:Constructs new file box.
+:    0) equivalent to #filebox(nullptr, is_open_mode);# [#!1.7]
+:    1) constructs new filebox. The dialog of filebox has a default title that provided by system.
+:    2) copy constructor.
+--parameters--
+owner
+:ahe handle to a owner window.
+is_open_mode
+:a flag to specify the dialog for open/save mode.
+other
+:another filebox to be used for initializing the filebox with
+--end--
+
+operator=
+:assigns with another filebox instance.
+decl=#filebox& operator=(const filebox& other);#
+--parameters--
+other
+:another filebox to be used for initializing the filebox with
+--returns--
+:the reference of #*this#.
+--end--
+
+---Modifiers---
+add_filter
+:adds a file type filter
+decl=#filebox& add_filter(const std::string& description, const std::string& file_type);#
+decl=#filebox& add_filter(const std::vector<std::pair<std::string, std::string>> &filters);#
+:File type filter filters the files whose types are not chosen types to hide.
+:    0) Adds a filter.
+:    1) Adds filters. This method is equivalent to
+```
+filebox& add_filter(const std::vector<std::pair<std::string, std::string>> &filters)
+{
+    for (auto &f : filters)
+		add_filter(f.first, f.second);
+	return *this;
+}
+```
+--parameters--
+description
+:a description for the filter
+file_type
+:filter pattern, e.g "*.TXT". To specify multiple filters in a single description, use a semicolon to separate the patters. e.g "*.TXXT;*.DOC;*.BMP".
+filters
+:a filter container
+--returns--
+:the reference of #*this#.
+--end--
+
+allow_multi_select
+:enables/disables multiple selection
+decl=#filebox& allow_multi_select(bool allow);#
+--parameters--
+allow
+:a flag indicates whether to enable or disable the multiple selection.
+--returns--
+:reference of #*this#.
+--end--
+
+init_file
+:sets a initial filename
+decl=#filebox& init_file(const std::string& filename);#
+:Suggest a filename when filebox starts. If the filename contains a path, the initial path will be replaced with the path presents in initial filename.
+--parameters--
+filename
+:a filename used for a initial filename when filebox starts.
+--returns--
+:the reference of #*this#.
+--end--
+
+init_path
+:sets a initial path
+decl=#filebox& init_path(const std::string& path);#[#!1.7]
+decl=#filebox& init_path(const path_type& path);#[#1.7]
+:Suggest initial path for locating a directory when the filebox starts.
+:The behaviors of init_path are different between Win7 and Win2K/XP/Vista, but its behavior under Linux is conformed with Win7.
+--parameters--
+path
+:a path of the initial directory
+--returns--
+:the reference of #*this#.
+--end--
+
+owner
+:changes the owner window
+decl=#void owner(window handle);#
+:Changes the owner window for the filebox. When #show()/operator()# are invoked, the dialog of filebox will be created with the specified owner.
+--parameters--
+handle
+:a handle to a window which will be used for the owner of filebox.
+--end--
+
+title[#1.7]
+:changes the title
+decl=#std::string title(std::string text);#[#!1.7]
+decl=#void title(std::string text);#[#1.7]
+:Changes the title. When #show()/operator()# are invoked, the dialog of filebox will be created with the specified title.
+--parameters--
+text
+:new title
+--returns--
+:0) the old title.
+--end--
+
+---Observers--
+file/files[#!1.7]
+:selected files
+decl=#std::string file() const;#[#!1.7]
+decl=#const std::vector<std::string>& files() const;#[#!1.7]
+--returns--
+:selected files
+--end--
+
+path
+:parent path of selected file
+decl=#const std::string& path() const;#[#!1.7]
+decl=#const path_type& path() const;#[#1.7]
+:Returns the parent path of selected file. Before #show()/operator()# get called, it returns the initial path.
+---returns--
+:parent path of selected file.
+--end--
+
+---Operations--
+show/operator()
+:shows dialog of filebox
+decl=#bool show() const;#[#!1.7]
+decl=#bool operator()() const;#[#1.7]
+decl=#std::vector<path_type> show() const;#[#1.7]
+decl=#std::vector<path_type> operator()() const;#[#1.7]
+:Creates and shows a dialog of filebox to allow user choose a file.
+--returns--
+:0,1) #true# if a file is selected, #false# otherwise.[#!1.7]
+:2,3) paths that chosen by user. If multiple selection is not enabled, it only returns a path. If user cancel to select, it returns an empty container.
+--end--
+
+==remark==
+:Selecting a folder.
+```
+#include <nana/gui/filebox.hpp>
+#include <iostream>
+
+int main()
+{
+    nana::filebox picker{nullptr, true};
+
+    auto paths = picker.show();
+    if(paths.empty())
+    {
+        std::cout<<"Cancelled"<<std::endl;
+    }
+    else
+    {
+        for(auto & p : paths)
+            std::cout << "Selected file:" << p << std::endl;
+    }
+}
+```
+--end--

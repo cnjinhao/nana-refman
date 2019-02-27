@@ -20,14 +20,41 @@ init_path
 :a default selected path
 --end--
 
+---Modifiers---
+allow_multi_select[#1.7]
+:enables/disables multiple selection
+decl=#folderbox& allow_multi_select(bool allow);#
+--parameters--
+allow
+:a flag indicates whether to enable or disable the multiple selection.
+--returns--
+:reference of #*this#.
+--end--
+
+title[#1.7]
+:changes the title
+decl=#std::string title(std::string text);#[#!1.7]
+decl=#folderbox& title(std::string text);#[#1.7]
+:Changes the title. When #show()/operator()# are invoked, the dialog of folderbox will be created with the specified title.
+--parameters--
+text
+:new title
+--returns--
+:0) the old title.
+:1) reference of #*this#.
+--end--
+
 ---Operations---
 show/operator()
 :shows the folderbox
-decl=#std::optional<path_type> show() const;#
-decl=#std::optional<path_type> operator()() const;#
+decl=#std::optional<path_type> show() const;#[#!1.7]
+decl=#std::optional<path_type> operator()() const;#[#!1.7]
+decl=#std::vector<path_type> show() const;#[#1.7]
+decl=#std::vector<path_type> operator()() const;#[#1.7]
 :Shows the folderbox and returns the path to a folder which has been selected by user.
 --returns--
-:a path to a folder which has been selected. If user cancelled the folderbox, it returns an empty std::optional.
+:0,1) a path to a folder which has been selected. If user cancelled the folderbox, it returns an empty std::optional.
+:2,3) paths of selected folders.
 --end--
 
 ==remark==
@@ -40,9 +67,16 @@ int main()
 {
     nana::folderbox picker;
 
-    auto folder = picker.show(); //returns an std::optional<nana::folderbox::path_type>
-    if (folder)
-        std::cout << "Selected folder:" << folder.value().string() << std::endl;
+    auto paths = picker.show();
+    if(paths.empty())
+    {
+        std::cout<<"Cancelled"<<std::endl;
+    }
+    else
+    {
+        for(auto & p : paths)
+            std::cout << "Selected folder:" << p << std::endl;
+    }
 }
 ```
 --end--
