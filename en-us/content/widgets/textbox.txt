@@ -25,6 +25,8 @@
 :behaviors when the focus changes
 text_positions
 :text coordinates of beginning of lines, Typedef name of std::vector<nana::upoint>
+path_type[#1.7]
+:typedef name of std::filesystem::path
 
 ==scheme==
 selection
@@ -219,7 +221,7 @@ offset
 --end--
 
 ---File operations---
-filename
+filename[#1.7]
 :the file of last store opertion
 decl=#std::string filename() const;#
 :Returns the name of file of last store operation.
@@ -227,13 +229,14 @@ decl=#std::string filename() const;#
 :The name of the file.
 --end--
 
-load
+load[#1.7]
 :loads a text file
-decl=#void load(std::string filename);#
+decl=#void load(std::string filename);#[#!1.7]
+decl=#void load(const path_type& filename);#[#1.7]
 :Loads a text file. When attempt to load a unicode encoded text file, be sure the file has a BOM header.
 --parameters--
 filename
-:the name of the file to be opened. This parameter only accepts a UTF-8 encoded string
+:the name of the file to be opened. Before 1.7, this parameter only accepts a UTF-8 encoded string
 --end--
 
 saved
@@ -244,16 +247,18 @@ decl=#bool saved() const;#
 :#true# if the content is saved, #false# otherwise.
 --end--
 
-store
+store[#1.7]
 :writes to a text file
-decl=#void store(std::string filename);#
-decl=#void store(std::string filename, unicode encoding);#
+decl=#void store(std::string filename);#[#!1.7]
+decl=#void store(std::string filename, unicode encoding);#[#!1.7]
+decl=#void store(const path_type& filename);#[#1.7]
+decl=#void store(const path_type& filename, unicode encoding);#[#1.7]
 :Writes the content of textbox to a text file.
-:  0) Writes to a file with local system encoding.
-:  1) Writes to a file with Unicode encoding.
+:  0,2) Writes to a file with local system encoding.
+:  1,3) Writes to a file with Unicode encoding.
 --parameters--
 filename
-:the name of the file to be written. This paremter only accepts a UTF-8 encoded string
+:the name of the file to be written. Before 1.7, this paremter only accepts a UTF-8 encoded string
 encoding
 :indicates a specified UTF
 --end--
