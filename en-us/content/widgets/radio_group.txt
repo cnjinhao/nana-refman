@@ -36,6 +36,7 @@ decl=#std::size_t size() const;#
 on_clicked[#1.7.1]
 :registers a click event handler
 decl=#template<typename Function> void on_clicked(Function&& fn);#
+:The checkboxes must be added to the radio_group before the click event handler is registered.
 --parameters--
 fn
 :a function of click event handler. It can have no parameter or one parameter which is #const arg_click&#.
@@ -44,6 +45,7 @@ fn
 on_checked[#1.7.1]
 :registers a check event handler
 decl=#template<typename Function> void on_checked(Function&& fn);#
+:The checkboxes must be added to the radio_group before the checked event handler is registered.
 --parameters--
 fn
 :a function of check event handler. It can have no parameter or one parameter which is #const arg_checkbox&#.
