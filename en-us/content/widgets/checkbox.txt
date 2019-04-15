@@ -108,6 +108,7 @@ state
 :indicates whether to check or uncheck the checkbox.
 --returns--
 :1) #true# if the checkbox is checked, #false# otherwise.
+--end--
 
 ==see also==
 [[radio_group]]
