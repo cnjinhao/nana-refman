@@ -1,0 +1,113 @@
+|name	=nana::checkbox
+|header =<nana/gui/widgets/checkbox.hpp>
+|decl	=#class checkbox;#
+:The #class checkbox# is an option label that can be checked or unchecked.
+```
+using namespace nana;
+
+form fm;
+
+checkbox ckbox{fm, rectangle{10, 10, 200, 30}};
+ckbox.caption("Checkbox");
+ckbox.events().click([&]{
+    std::cout<<"The checkbox is "<<(ckbox.checked() ? "checked":"unchecked")<<std::endl;
+});
+
+fm.show();
+exec();
+```
+
+==base==
+[[widget_object<category::root_tag>]//./widgets/widget_object_root_tag.htm] : public [[widget]]
+
+==events==
+[[general events]//./core/events.htm]
+#checked(const [[arg_checkbox]]&)#
+:occurs when the check state is changed.
+
+==scheme==
+square_bgcolor[#1.7]
+:the background colour of checkmark box
+square_border_color[#1.7]
+:the colour of checkmark box border
+
+==member functions==
+(constructors)
+:constructs the checkbox
+decl=#checkbox();#
+decl=#checkbox(window parent, bool visible);#
+decl=#checkbox(window parent, const std::string& text, bool visible = true);#
+decl=#checkbox(window parent, const char* text, bool visible = false);#
+decl=#checkbox(window parent, const rectangle& rect = rectangle{}, bool visible = true);#
+:Constructs the checkbox.
+:  0) Default constructor, it constructs the checkbox without creating UI element.
+:  1-4) Construct the checkbox and create UI element.
+--parameters--
+parent
+:a handle to a parent widget for the checkbox widget
+rect
+:the size and position of the checkbox widget
+text
+:initialized label text
+visible
+:indicates visibility of the checkbox widget
+--end--
+
+element_set
+:changes checkmark renderer
+decl=#void element_set(const char* name);#
+--end--
+
+transparent
+:enables/disables transparent background
+decl=#void transparent(bool enable_transparency);#
+decl=#bool transparent() const;#
+:Enables/disables transparent background
+:  0) Enables/disables transparent background.
+:  1) Determines whether the background of checkbox is transparent
+--parameters--
+enable_transparency
+:indicates whether to enable or disable transparent background.
+--returns--
+:1) #true# if the background is transparent, #false# otherwise.
+--end--
+
+---Behaviors---
+radio
+:enables/disables radio appearance
+decl=#void radio(bool radio_appearance);#
+:Enables/disables the radio appearance of checkbox. The radio appearance tells user to make a choice among a set of mutually exclusive, related options. Users can choose one and only one option.
+:To enable the radio mode, see [[radio_group]].
+--parameters--
+radio_appearance
+:a flag indicates whether to enable or disable the radio appearance
+--see also--
+radio_group
+--end--
+
+react
+:enables/disables reverse check
+decl=#void react(bool reverse_check);#
+:If reverse check is enabled, the checkbox reversely checks when user clicks on it.
+:The default value of reverse check is #true#.
+--parameters--
+reverse_check
+:a flag indicates whether to enable or disable reverse check.
+--end--
+
+---Operations---
+check/checked
+:checks/unchecks the checkbox
+decl=#void check(bool state);#
+decl=#bool checked() const;#
+:Checks/unchecks the checkbox
+:  0) Checks or unchecks the checkbox.
+:  1) Determines whether the checkbox is checked.
+--parameters--
+state
+:indicates whether to check or uncheck the checkbox.
+--returns--
+:1) #true# if the checkbox is checked, #false# otherwise.
+
+==see also==
+[[radio_group]]

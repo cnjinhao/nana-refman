@@ -1,0 +1,110 @@
+|name	=nana::timer
+|header	=<nana/gui/timer.hpp>
+|decl	=#class timer;#
+:The #class timer# provides a way to call a function or execute a code snippet repeatedly, with a fixed time delay between each call to that function.
+```
+nana::form fm;
+
+nana::timer timer{std::chrono::seconds{1}};
+
+timer.elapse([&fm]{
+	static int i = 0;
+	fm.caption(std::to_string(i++));
+});
+
+timer.start();
+fm.show();
+
+nana::exec();
+```
+:A timer object requires the event loop to drive the event handling, so the calling thread must be blocked by #nana::exec()# and at least one window alive.
+
+==member functions==
+(constructors)
+:constructs the timer
+decl=#timer();#
+decl=#explicit timer(std::chrono::milliseconds time);#
+:Constructs the timer:
+:  0) Default constructor, the default interval value is 1 second.
+:  1) Constructs the timer with a specified fixed time, which indicates the delay between each call.
+```
+nana::timer timer{std::chrono::milliseconds{500}};
+
+using namespace std::chrono_literals;
+nana::timer timer{2s};
+```
+--parameters--
+time
+:a fixed time delay between each call.
+--end--
+
+---Operations---
+interval[#1.7.1]
+:gets/sets the interval
+decl=#void interval(unsigned milliseconds);#[#!1.7]
+decl=#unsigned interval() const;#[#!1.7]
+decl=#void interval(std::chrono::milliseconds ms);#[#1.7.1]
+decl=#template<typename Duration=std::chrono::milliseconds> Duration interval() const;#[#1.7.1]
+:Sets interval to specify the delay between each call.
+```
+auto value1 = timer.interval();
+auto value2 = timer.interval<std::chrono::microseconds>();
+if(value1 == value2)
+{
+	//TRUE
+}
+```
+--parameters--
+milliseconds
+:the interval time, in millisecond.
+ms
+:the interval time
+--returns--
+:1), the interval time, in millisecond.
+:3), the interval time, type of #std::chrono::duration#.
+--end--
+
+reset
+:reset the timer
+decl=#void reset();#
+:Stops the timer and clears all event handlers.
+--end--
+
+start/started
+:starts the timer
+decl=#void start();#
+decl=#bool started() const;
+:Starts the timer
+:  0) starts the timer, the registered event handlers are called repeatedly.
+:  1) determines whether the timer is started.
+--returns--
+:1) #true# if the timer is started, #false# otherwise.
+--end--
+
+stop
+:stops the timer
+decl=#void stop();#
+:Stops the timer, it doesn't delete event handlers. To restart the timer, just call #start()#.
+--end--
+
+---Events---
+elapse
+:appends a handler
+decl=#template<typename Function> void elapse(Function&& elapse_fn);#
+:Appends a function or a code snippet, which will be called repeatedly when the timer is started.
+```
+timer.elapse([]{
+	//todo
+});
+//or
+timer.elapse([](const nana::arg_elapse& arg){
+	//todo with arg
+});
+```
+--parameters--
+elapse_fn
+:a function for the event handling.
+--end--
+
+==remark==
+:The timer is implemented with WM_TIMER under Windows, the minimal value of interval is 16 milliseconds.
