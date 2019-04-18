@@ -98,30 +98,6 @@ enabled
 :1) #true# if the treebox is checkable, false otherwise.
 --end--
 
-find
-:finds a node
-decl=#[[item_proxy]/widgets/treebox-item_proxy] find(const std::string& path_key);#
-:Finds a node by the path of key.
---parameters--
-path_key
-:path of a node
---returns--
-:An item proxy to the found node.
---end--
-
-make_key_path
-:returns the key path of the specified node
-decl=#std::string make_key_path([[item_proxy]/widgets/treebox-item_proxy] node, const std::string& splitter);#
-:returns the path of key.
---parameters--
-node
-:item proxy to a node
-splitter
-:splitting text between nodes
---returns--
-:The key path string.
---end--
-
 placer
 :location of components within a node
 decl=#template<typename Placer> treebox& placer(const Placer& p);#
@@ -144,6 +120,31 @@ rend
 --returns--
 :0) The reference of #*this#.
 :1) The reference to current node renderer.
+--end--
+
+---Node access---
+find
+:finds a node
+decl=#[[item_proxy]/widgets/treebox-item_proxy] find(const std::string& path_key);#
+:Finds a node by the path of key.
+--parameters--
+path_key
+:path of a node
+--returns--
+:An item proxy to the found node.
+--end--
+
+make_key_path
+:returns the key path of the specified node
+decl=#std::string make_key_path([[item_proxy]/widgets/treebox-item_proxy] node, const std::string& splitter);#
+:returns the path of key.
+--parameters--
+node
+:item proxy to a node
+splitter
+:splitting text between nodes
+--returns--
+:The key path string.
 --end--
 
 hovered[#1.7.1]
