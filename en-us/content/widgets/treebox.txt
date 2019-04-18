@@ -146,9 +146,21 @@ rend
 :1) The reference to current node renderer.
 --end--
 
+hovered[#1.7.1]
+:returns the hovered node
+decl=#[[item_proxy]/widgets/treebox-item_proxy] hovered(bool exclude_expander) const;#
+--parameters--
+exclude_expander
+:indicates whether to return an empty item if hovered on the expander of node. If this parameter is #true#, it returns an empty item proxy when the mouse hovers on the expander of the node. If the parameter is #false#, it returns an item proxy to the hovered node.
+--returns--
+:[[item_proxy]/widgets/treebox-item_proxy] to the hovered node.
+--end--
+
 selected
 :returns the selected node
 decl=#[[item_proxy]/widgets/treebox-item_proxy] selected() const;#
+--returns--
+:[[item_proxy]/widgets/treebox-item_proxy] to the selected node.
 --end--
 
 ---Modifiers---
@@ -248,65 +260,69 @@ bearing
 ==remark==
 :Loading directoris into the treebox
 ```
+#include <nana/gui.hpp>
+#include <nana/gui/widgets/treebox.hpp>
+
+void load_path(nana::treebox& tree, nana::treebox::item_proxy node, std::filesystem::path p)
+{
+	namespace fs = std::filesystem;
+
+	std::error_code err;
+	for (fs::directory_iterator i{p, fs::directory_options::skip_permission_denied}, end; i != end; ++i)
+	{
+		if (!is_directory(*i, err)) continue;
+
+		auto name = i->path().filename().u8string();
+		auto child = tree.insert(node, name, name);
+		if(child.empty())
+			continue;
+
+		//Find a directory in child directory, if there is a directory,
+		//insert it into the child, just insert one node to indicate the
+		//node has a child and an arrow symbol will be?displayed in the
+		//front of the node.
+		for (fs::directory_iterator u{ i->path(), fs::directory_options::skip_permission_denied }; u != end; ++u)
+		{
+			if (!is_directory(*u, err)) continue; //If it is not a directory.
+			auto name = u->path().filename().u8string();
+			tree.insert(child, name, name);
+			break;
+		}	
+	}
+}
+
+int main()
+{
 	using namespace nana;
+
 	form fm{ API::make_center(300, 300), appear::decorate<appear::taskbar>() };
 	fm.caption("Nana C++ Library - Treebox Sample.");
 
 	nana::treebox tree(fm, { 0, 0, 300, 300 });
 
-	namespace fs = std::filesystem;
 #if defined(NANA_WINDOWS)
 	auto node = tree.insert("C:", "Local Drive(C:)");
-	fs::directory_iterator i("C:\\", fs::directory_options::skip_permission_denied), end;
+	load_path(tree, node, "C:\\");
 #elif defined(NANA_LINUX)
-	auto node = tree.insert("/", "Root/");
-	fs::directory_iterator i("/", fs::directory_options::skip_permission_denied), end;
+	load_path(tree, {}, "/");
 #endif
 
-	std::error_code err_code;
-	for (; i != end; ++i)
-	{
-		if (!is_directory(*i, err_code)) continue;
-
-		auto name = i->path().filename().u8string();
-		tree.insert(node, name, name);
-		break;
-	}
-
 	tree.events().expanded([&tree](const arg_treebox& arg)
-	{
-		if (!arg.operated) return; //If this is contracted.
+		{
+			if (!arg.operated) return; //If this is contracted.
 
-		//Windows supports the path separator '/'
-		auto path = tree.make_key_path(arg.item, "/") + "/";
-
-		//Avoids frequent useless refreshing when every time it inersts a node
-		tree.avoid_drawing([&] {
-			std::error_code err_code;
-			//Walk in the path directory for sub directories.
-			for (fs::directory_iterator i{ path, fs::directory_options::skip_permission_denied }, end; i != end; ++i)
-			{
-				if (!fs::is_directory(*i, err_code)) continue; //If it is not a directory.
-
-				auto name = i->path().filename().u8string();
-				auto child = tree.insert(arg.item, name, name);
-				if (child.empty()) continue;
-
-				//Find a directory in child directory, if there is a directory,
-				//insert it into the child, just insert one node to indicate the
-				//node has a child and an arrow symbol will be?displayed in the
-				//front of the node.
-				for (fs::directory_iterator u{ path + name, fs::directory_options::skip_permission_denied }; u != end; ++u)
-				{
-					if (!is_directory(*u, err_code)) continue; //If it is not a directory.
-					auto name = u->path().filename().u8string();
-					tree.insert(child, name, name);
-					break;
-				}
-			}
+			//Windows supports the path separator '/'
+			auto path = tree.make_key_path(arg.item, "/") + "/";
+#if defined(NANA_LINUX)
+			path.insert(path.begin(), '/');
+#endif
+			//Avoids frequent useless refreshing when every time it inersts a node
+			tree.avoid_drawing([&] {
+				load_path(tree, arg.item, path);
+			});
 		});
-	});
 
 	fm.show();
 	exec();
+}
 ```
