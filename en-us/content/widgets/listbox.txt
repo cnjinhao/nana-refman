@@ -461,6 +461,16 @@ show
 :indicates whether to show or hide the listbox column header.
 --end--
 
+set_deselect[#1.7.2]
+:sets a deselection predicate
+decl=#void set_deselect(std::function<bool(nana::mouse)> predicate);#
+:Sets a predicate that indicates whether to deselect items when mouse_up is triggered.
+:The predicate is called before the listbox attempts to deselect the selected items in the mouse_up event. Other situations, the predicates isn't called, for example, releasing mouse button after user performed a box selection, because listbox doesn't deselect the items during this operation.
+--parameters--
+predicate
+:Decides to deselect the items. The paramater of predicate indicates the mouse button which is releasing. It returns true to deselect the selected items. It returns false to cancel to deselect the selected items.
+--end-- 
+
 ---Modifiers---
 append
 :appends a new category at the end
