@@ -53,9 +53,15 @@ decl=#bool displayed() const;#
 --end--
 
 empty
-:determines whether the item proxy is valid
-decl=#bool empty() const;#
-:Determines whether the item proxy is valid
+:determines whether the item proxy is invalid
+decl=#bool empty() const noexcept;#
+:Determines whether the item proxy refers to an invalid item.
+```
+form fm;
+listbox list{ fm };
+
+auto x = list.at(0).end().empty();	//x is true. An END item_proxy is empty
+```
 --returns--
 :#true# if it is invalid, #false# otherwise.
 --end--
