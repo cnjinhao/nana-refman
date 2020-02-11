@@ -70,6 +70,21 @@ decl=#bool empty() const;#
 :#true# if it is empty, #false# otherwise.
 --end--
 
+hide/hidden[#1.7.3]
+:shows/hides the node
+decl=#item_proxy& hide(bool invisible);#
+decl=#bool hidden() const;#
+:When all children of the node are hidden, the treebox doesn't render the expander for the node.
+: 0) Shows/hides the node.
+: 1) Determines whether the node is hidden.
+--parameters--
+invisible
+:indicates whether to hide or show the node.
+--returns--
+:0) The reference of #*this#.
+:1) #true# if the node is hidden, #false# otherwise.
+--end--
+
 icon
 :sets icon scheme
 decl=#item_proxy& icon(const std::string& name);#

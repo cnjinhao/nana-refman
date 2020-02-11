@@ -16,9 +16,11 @@
 :occurs when a node is selected or deselected.
 #hovered(const [[arg_treebox]]&)#
 :occurs when a user moves the cursor over a node.
+#hidden(const [[arg_treebox]]&)#[#1.7.3]
+:occurs when a node is shown or hidden.
 
 ==member types==
-[[item_proxy]/widgets/treebox-item_proxy]
+[[item_proxy]/widgets/treebox-item_proxy][#1.7.3]
 :iterator to access item.
 node_image_type
 :state images for the node.
@@ -120,6 +122,15 @@ rend
 --returns--
 :0) The reference of #*this#.
 :1) The reference to current node renderer.
+--end--
+
+use_entire_line[#1.7.3]
+:enables/disables the interactions on the entire line.
+decl=#void use_entire_line(bool enable);#
+:Enables or disables the interactions(selection, click) on the entire line of a node.
+--parameters--
+enable
+:indicates whether to enable or disable the interactions on the entire line.
 --end--
 
 ---Node access---
