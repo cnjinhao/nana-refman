@@ -37,6 +37,14 @@ selection_text
 :color of selected text
 mouse_wheel
 :The number of lines/characters to scroll when the vertical/horizontal mouse wheel is moved
+tip_string_color[#1.8]
+:The color of tip string
+tip_string_floating_distance_px[#1.8]
+:The distance between tip string and content when the tip string is floating to top on focus, in pixels
+tip_string_floating_font_min_pt[#1.8]
+:The tip string is hidden when the font size of floating tip is less than the specified size, in points
+tip_string_floating_font_factor[#1.8]
+:The font size factor of tip string. The max_font_size_of_tip = the_factor * font_size_of_content.
 
 ==member functions==
 constructors
@@ -151,6 +159,23 @@ enable
 --returns--
 :0) #true# if the textbox is multiple lines mode, #false# otherwise.
 :1) The reference of #*this#.
+--end--
+
+padding[#1.8]
+:sets the padding area
+decl=#textbox& padding(unsigned top, unsigned right, unsigned bottom, unsigned left);#
+:Sets the padding area for 4 sides.
+--parameters--
+top
+:top area between content and top edge, in pixels.
+right
+:right area between content and right edge, in pixels.
+bottom
+:bottom area between content and bottom edge, in pixels.
+left
+:left area between content and bottom edge, in pixels.
+--returns--
+: The reference of #*this#.
 --end--
 
 ---Caret---
