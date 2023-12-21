@@ -181,5 +181,5 @@ fn
 
 ==remark==
 :Refer to the [[Div-Text]//https://github.com/cnjinhao/nana/wiki/Div-Text][#1.6] for the rule of layout management.
---end--
+
 

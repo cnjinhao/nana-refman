@@ -96,4 +96,3 @@ verifier
 :  NANA_BUTTON_BROWSE:	Browse button
 :and
 :  "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
---end--

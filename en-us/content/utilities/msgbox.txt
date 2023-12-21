@@ -94,4 +94,3 @@ t
 
 ==remark==
 :[[Using Message Box]//https://github.com/cnjinhao/nana/wiki/Using-Message-Box] shows the msgbox usages.
---end--

@@ -104,7 +104,6 @@ int main()
 	exec();
 }
 ```
---end--
 
 ==see also==
 [[graphics]/paint/graphics]
